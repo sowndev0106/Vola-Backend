@@ -8,7 +8,7 @@ export interface IFriend {
 }
 export enum StatusFriend {
   Accepted,
-  Sent,
+  UnAccepted,
+  Stranger,
   Deny,
-  Block,
 }
