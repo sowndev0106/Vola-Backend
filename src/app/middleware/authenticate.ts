@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import UserRepository from "../../infrastructure/dynamoDB/repository/UserRepository";
+import UserRepository from "../../infrastructure/mongoose/repositories/UserRepository";
 import firebaseAdmin from "..//..//infrastructure/firebase";
 import HeaderTokenInvalidError from "../errors/HeaderTokenInvalidError";
 
@@ -15,9 +15,10 @@ export default async (req: Request, res: Response, next: NextFunction) => {
     }
     const { name, uid, picture, firebase, email } = decodeValue as any;
     let user = await UserRepository.getOneByIdProvider(decodeValue.uid);
+
     if (!user) {
       // create new user
-      user = await UserRepository.addOrUpdateOne({
+      user = await UserRepository.add({
         idProvider: uid,
         name: name,
         avatar: picture,
@@ -25,7 +26,7 @@ export default async (req: Request, res: Response, next: NextFunction) => {
         email: email,
       });
     }
-    req.headers.userId = user.id;
+    req.headers.userId = user._id;
     return next();
   } catch (error) {
     throw new HeaderTokenInvalidError("authorization token invalid");

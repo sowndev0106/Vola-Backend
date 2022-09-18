@@ -1,15 +1,20 @@
 import { Response } from "express";
 import UserRepository from "../../../infrastructure/mongoose/repositories/UserRepository";
-import Handler from "..//Handler";
+import Handler from "../Handler";
 export interface IGetMyProfileRequest {
-  id: string;
+  email: string;
 }
 class GetMyProfileHandler extends Handler<IGetMyProfileRequest> {
-  protected async validate(request: IGetMyProfileRequest) {}
+  protected async validate(request: IGetMyProfileRequest) {
+    const regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    if (!request.email || !regexEmail.test(request.email))
+      throw new Error("Email invalid");
+  }
 
   public async handle(request: IGetMyProfileRequest): Promise<any> {
     await this.validate(request);
-    const user = await UserRepository.findOneById(request.id);
+    const user = await UserRepository.getOneByEmail(request.email);
+    if (!user) throw new Error("Email not found");
     return user;
   }
 }

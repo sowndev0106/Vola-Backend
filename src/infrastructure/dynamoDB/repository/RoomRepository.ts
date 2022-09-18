@@ -15,7 +15,6 @@ class RoomRepository extends Repository<IRoom> {
       },
       FilterExpression: `contains (users, :id)`,
     };
-    console.log(params);
     const { Items } = await dynamoDB.scan(params).promise();
     return Items ? (Items as IRoom[]) : null;
   }

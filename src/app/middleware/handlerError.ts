@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import ValidationError from "../errors/ValidationError";
 
 export default function (
   err: Error,
@@ -24,10 +25,10 @@ export default function (
       res.status(403);
       break;
 
-    // case 'ValidationError':
-    // 	res.status(422);
-    // 	error.error = (err as ValidationError).messageBag;
-    // 	break;
+    case "ValidationError":
+      res.status(422);
+      error.error = (err as ValidationError).messageBag;
+      break;
     default:
       res.status(400);
   }

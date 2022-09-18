@@ -5,6 +5,7 @@ import helmet from "helmet";
 import morgan from "morgan";
 import cors from "cors";
 import route from "./app/route";
+import "./infrastructure/mongoose";
 
 const port = Number(process.env.PORT || 5000);
 const app = express();
