@@ -3,6 +3,7 @@ import GetMyProfileHandler, {
   IGetMyProfileRequest,
 } from "../handlers/user/GetMyProfileHandler";
 import GetUserByEmailHandler from "../handlers/user/GetUserByEmailHandler";
+import GetUserByIdHandler from "../handlers/user/GetUserByIdHandler";
 
 class UserController {
   // [GET] api/users/profile
@@ -17,7 +18,16 @@ class UserController {
   async getUserByEmail(req: Request, res: Response, next: NextFunction) {
     const email = req.params.email as string;
     const result = await GetUserByEmailHandler.handle({ email });
-    const { _id, __v, idProvider, ...props } = result;
+    const { __v, idProvider, createdAt, updatedAt, ...props } = result._doc;
+    res.status(200).json({
+      ...props,
+    });
+  }
+  // [GET] api/users/:id
+  async getUserById(req: Request, res: Response, next: NextFunction) {
+    const id = req.params.id as string;
+    const result = await GetUserByIdHandler.handle({ id });
+    const { __v, idProvider, createdAt, updatedAt, ...props } = result._doc;
     res.status(200).json({
       ...props,
     });

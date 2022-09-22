@@ -1,4 +1,4 @@
-import { IRoom, TypeRoom } from "../../../app/entities/Room";
+import { IMessage, IRoom, TypeRoom } from "../../../app/entities/Room";
 import Repository from "./Repository";
 import RoomModel from "../model/Room";
 import UserModel from "../model/User";
@@ -60,6 +60,13 @@ class RoomRepository extends Repository<IRoom> {
     if (!room.name) room.name = user.name;
 
     return room;
+  }
+  async addMessage(message: IMessage, roomId: string) {
+    const room = await RoomModel.updateOne(
+      { _id: roomId },
+      { $push: { messages: message } }
+    );
+    return message;
   }
 }
 export default new RoomRepository();

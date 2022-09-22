@@ -1,23 +1,24 @@
 export interface IRoom {
-  users: UserRoom[];
+  users: IUserRoom[];
   _id?: string;
   name?: string;
   avatar?: string;
-  message: Message[];
+  message: IMessage[];
   typeRoom: TypeRoom;
   createdAt?: Date;
   updatedAt?: Date;
 }
-export interface UserRoom {
+export interface IUserRoom {
   _id: string;
   lastMessageRead?: string;
   deletedAt?: Date | null;
 }
-export interface Message {
-  _id: string;
+export interface IMessage {
+  _id?: string;
   user: string;
   content: string;
   type: TypeMeesage;
+  createdAt: Date;
 }
 export enum TypeMeesage {
   File = "file",

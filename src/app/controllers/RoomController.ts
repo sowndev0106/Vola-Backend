@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import GetPrivateRoomByUserHandler from "../handlers/rooms/GetPrivateRoomByUserHandler";
 import GetMyRoomsHandler from "../handlers/rooms/GetMyRoomsHandler";
+import { IMessage } from "../entities/Room";
 
 class UserController {
   // [GET] api/rooms/users/:userId
@@ -22,5 +23,6 @@ class UserController {
     const result = await GetMyRoomsHandler.handle(request);
     res.status(200).json(result);
   }
+  async addMeesage(req: Request, res: Response, next: NextFunction) {}
 }
 export default new UserController();

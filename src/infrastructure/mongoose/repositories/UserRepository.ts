@@ -11,9 +11,9 @@ class UserRepository extends Repository<IUser> {
     return user as any;
   }
   async getOneByEmail(email: string): Promise<IUser | null> {
-    const user = (await UserModel.findOne({ email }).exec()) as any;
+    const user = await UserModel.findOne({ email }).exec();
     if (!user) return null;
-    return user._doc as any;
+    return user as any;
   }
 }
 export default new UserRepository();
