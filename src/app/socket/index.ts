@@ -1,26 +1,34 @@
-import { Server, Socket as Client } from "socket.io";
+import { Server, Socket } from "socket.io";
+import logger from "../../infrastructure/logger";
+import { IMessage } from "../entities/Room";
 import { IUser } from "../entities/User";
-import addUserHandler from "./handler/addUserHandler";
-export default class Socket {
-  private users: IUser[] = [];
+import Client from "./Client";
+export default class SocketServer {
+
+  users: Map<string, IUser> ;
   private io: Server;
+
   constructor(server: any) {
-    this.io = new Server(server);
+    this.io = new Server(server,{
+      cors: {
+        origin: "*",
+      }
+    });
+    this.users = new Map<string, IUser>();
     this.startSocket();
   }
-  private startSocket() {
-    this.io.on("connection", this.connection);
-  }
-  private connection(client: Client) {
-    const { token } = client.data;
 
-    // add user to list users
-    addUserHandler(this.users, token).catch((error) =>
-      this.error(client, error)
-    );
+  private startSocket() {
+    this.io.on("connection", this.onConnection.bind(this));
   }
-  private error(client: Client, error: any) {
-    
-    client.emit("error", error);
+
+  private  onConnection(client: Socket) {
+    const { token } = client.handshake.query as {token: string}
+    logger.info(`Connection from ${client.id}`)
+
+    new Client(client, this, token);
+  }   
+  serverSendMessageToUser(user:IUser, message:IMessage){
+
   }
 }

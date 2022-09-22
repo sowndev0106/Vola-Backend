@@ -29,6 +29,7 @@ export default async (req: Request, res: Response, next: NextFunction) => {
     req.headers.userId = user._id;
     return next();
   } catch (error) {
+    console.log(error)
     throw new HeaderTokenInvalidError("authorization token invalid");
   }
 };
