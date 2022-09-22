@@ -20,6 +20,7 @@ export default class Socket {
     );
   }
   private error(client: Client, error: any) {
+    
     client.emit("error", error);
   }
 }
