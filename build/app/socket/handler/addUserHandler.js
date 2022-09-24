@@ -12,20 +12,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const RoomRepository_1 = __importDefault(require("../../../infrastructure/mongoose/repositories/RoomRepository"));
 const UserRepository_1 = __importDefault(require("../../../infrastructure/mongoose/repositories/UserRepository"));
-const Handler_1 = __importDefault(require("..//Handler"));
-class GetMyProfileHandler extends Handler_1.default {
-    validate(request) {
-        return __awaiter(this, void 0, void 0, function* () { });
-    }
-    handle(request) {
-        return __awaiter(this, void 0, void 0, function* () {
-            yield this.validate(request);
-            const user = yield UserRepository_1.default.findOneById(request.id);
-            const rooms = yield RoomRepository_1.default.getRoomsByUser(request.id, 10, 0);
-            return { user, rooms };
-        });
-    }
-}
-exports.default = new GetMyProfileHandler();
+const firebase_1 = __importDefault(require("../../../infrastructure/firebase"));
+exports.default = (socketMain, token) => __awaiter(void 0, void 0, void 0, function* () {
+    const decodeValue = yield firebase_1.default
+        .auth()
+        .verifyIdToken(token.split(" ")[1]);
+    if (!decodeValue)
+        throw new Error("Token invalid");
+    let user = yield UserRepository_1.default.getOneByIdProvider(decodeValue.uid);
+    if (!user)
+        throw new Error("User not found");
+    socketMain.users.set(user._id, user);
+});

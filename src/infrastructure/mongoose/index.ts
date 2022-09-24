@@ -11,7 +11,6 @@ const connect = () => {
     .connect(process.env.MONGO_URL as string, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-      useCreateIndex: true,
       useFindAndModify: false,
     })
     .then(() => {

@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import GetPrivateRoomByUserHandler from "../handlers/rooms/GetPrivateRoomByUserHandler";
 import GetMyRoomsHandler from "../handlers/rooms/GetMyRoomsHandler";
 import { IMessage } from "../entities/Room";
+import GetMessagesHandler from "../handlers/rooms/GetMessagesHandler";
 
 class UserController {
   // [GET] api/rooms/users/:userId
@@ -21,6 +22,17 @@ class UserController {
       userId: req.headers.userId as string,
     };
     const result = await GetMyRoomsHandler.handle(request);
+    res.status(200).json(result);
+  }
+  // [GET] api/rooms/messages
+  async getMesageByGroup(req: Request, res: Response, next: NextFunction) {
+    const request = {
+      limit: Number(req.query.limit),
+      page: Number(req.query.page),
+      roomId: req.params.roomId as string,
+      type: req.query.type as string,
+    };
+    const result = await GetMessagesHandler.handle(request);
     res.status(200).json(result);
   }
   async addMeesage(req: Request, res: Response, next: NextFunction) {}

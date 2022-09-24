@@ -12,20 +12,27 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const RoomRepository_1 = __importDefault(require("../../../infrastructure/mongoose/repositories/RoomRepository"));
-const UserRepository_1 = __importDefault(require("../../../infrastructure/mongoose/repositories/UserRepository"));
-const Handler_1 = __importDefault(require("..//Handler"));
-class GetMyProfileHandler extends Handler_1.default {
-    validate(request) {
-        return __awaiter(this, void 0, void 0, function* () { });
+const Repository_1 = __importDefault(require("./Repository"));
+const User_1 = __importDefault(require("..//model/User"));
+class UserRepository extends Repository_1.default {
+    constructor() {
+        super(User_1.default);
     }
-    handle(request) {
+    getOneByIdProvider(idProvider) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.validate(request);
-            const user = yield UserRepository_1.default.findOneById(request.id);
-            const rooms = yield RoomRepository_1.default.getRoomsByUser(request.id, 10, 0);
-            return { user, rooms };
+            const user = yield User_1.default.findOne({ idProvider }).exec();
+            if (!user)
+                return null;
+            return user;
+        });
+    }
+    getOneByEmail(email) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const user = yield User_1.default.findOne({ email }).exec();
+            if (!user)
+                return null;
+            return user;
         });
     }
 }
-exports.default = new GetMyProfileHandler();
+exports.default = new UserRepository();

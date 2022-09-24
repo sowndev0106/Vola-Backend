@@ -7,10 +7,12 @@ const express_1 = require("express");
 const authenticate_1 = __importDefault(require("../middleware/authenticate"));
 const handlerError_1 = __importDefault(require("../middleware/handlerError"));
 const user_1 = __importDefault(require("./user"));
+const room_1 = __importDefault(require("./room"));
 const router = (0, express_1.Router)();
 router.use(authenticate_1.default);
 // collect error
 router.use("/users", user_1.default);
+router.use("/rooms", room_1.default);
 router.use("/error", () => {
     throw new Error("loi ne ");
 });

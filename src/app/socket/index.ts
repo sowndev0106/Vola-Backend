@@ -4,8 +4,13 @@ import { IMessage } from "../entities/Room";
 import { IUser } from "../entities/User";
 import Client from "./Client";
 export default class SocketMain {
-  clients: Map<string, string>; // <clientId, UserId>
-  users: Map<string, IUser>; // <userId, User>
+  users: Map<
+    string,
+    {
+      dirver: number;
+      user: IUser;
+    }
+  >; // <userId, User>
   private io: Server;
 
   constructor(server: any) {
@@ -14,8 +19,13 @@ export default class SocketMain {
         origin: "*",
       },
     });
-    this.users = new Map<string, IUser>(); // <userId, User>
-    this.clients = new Map<string, string>(); // <clientId, UserId>
+    this.users = new Map<
+      string,
+      {
+        dirver: number;
+        user: IUser;
+      }
+    >(); // <userId, User>
     this.startSocket();
   }
 
@@ -29,5 +39,9 @@ export default class SocketMain {
 
     new Client(client, this, token);
   }
-  serverSendMessageToUser(user: IUser, message: IMessage) {}
+  serverSendMessageToUsers(userIds: string[], message: IMessage) {
+    userIds.forEach((e) => {
+      this.io.to(String(e)).emit("server-send-message", message);
+    });
+  }
 }

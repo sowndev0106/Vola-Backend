@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const UserRepository_1 = __importDefault(require("../../infrastructure/dynamoDB/repository/UserRepository"));
+const UserRepository_1 = __importDefault(require("../../infrastructure/mongoose/repositories/UserRepository"));
 const firebase_1 = __importDefault(require("..//..//infrastructure/firebase"));
 const HeaderTokenInvalidError_1 = __importDefault(require("../errors/HeaderTokenInvalidError"));
 exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -30,7 +30,7 @@ exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function
         let user = yield UserRepository_1.default.getOneByIdProvider(decodeValue.uid);
         if (!user) {
             // create new user
-            user = yield UserRepository_1.default.addOrUpdateOne({
+            user = yield UserRepository_1.default.add({
                 idProvider: uid,
                 name: name,
                 avatar: picture,
@@ -38,10 +38,11 @@ exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function
                 email: email,
             });
         }
-        req.headers.userId = user.id;
+        req.headers.userId = user._id;
         return next();
     }
     catch (error) {
+        console.log(error);
         throw new HeaderTokenInvalidError_1.default("authorization token invalid");
     }
 });

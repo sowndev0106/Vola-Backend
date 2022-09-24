@@ -12,19 +12,22 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const RoomRepository_1 = __importDefault(require("../../../infrastructure/mongoose/repositories/RoomRepository"));
 const UserRepository_1 = __importDefault(require("../../../infrastructure/mongoose/repositories/UserRepository"));
-const Handler_1 = __importDefault(require("..//Handler"));
+const Handler_1 = __importDefault(require("../Handler"));
 class GetMyProfileHandler extends Handler_1.default {
     validate(request) {
-        return __awaiter(this, void 0, void 0, function* () { });
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!request.id || !request.id.trim())
+                throw new Error("Id invalid");
+        });
     }
     handle(request) {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.validate(request);
             const user = yield UserRepository_1.default.findOneById(request.id);
-            const rooms = yield RoomRepository_1.default.getRoomsByUser(request.id, 10, 0);
-            return { user, rooms };
+            if (!user)
+                throw new Error("UserId not found");
+            return user;
         });
     }
 }

@@ -1,4 +1,9 @@
-import { IMessage, IRoom, TypeRoom } from "../../../app/entities/Room";
+import {
+  IMessage,
+  IRoom,
+  TypeMeesage,
+  TypeRoom,
+} from "../../../app/entities/Room";
 import Repository from "./Repository";
 import RoomModel from "../model/Room";
 import UserModel from "../model/User";
@@ -50,7 +55,7 @@ class RoomRepository extends Repository<IRoom> {
     if (!room) {
       // create new room private
       room = await this.add({
-        message: [],
+        messages: [],
         users: [{ _id: myId }, { _id: userId }],
         typeRoom: TypeRoom.Private,
       });
@@ -67,6 +72,26 @@ class RoomRepository extends Repository<IRoom> {
       { $push: { messages: message } }
     );
     return message;
+  }
+  async getMessagesByRoom(
+    roomId: string,
+    limit: number,
+    offset: number,
+    type: TypeMeesage | null
+  ) {
+    let query = { _id: roomId } as any;
+    const select = {
+      __v: 0,
+      messages: { $slice: [offset, limit + offset] },
+    };
+
+    if (type) {
+      query.messages = { $elemMatch: { type: type } };
+    }
+    console.log(query);
+    const room = (await RoomModel.findOne(query, select).exec()) as any;
+    if (!room) return [];
+    return room.messages as IMessage[];
   }
 }
 export default new RoomRepository();

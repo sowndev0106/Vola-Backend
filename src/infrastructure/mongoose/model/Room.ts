@@ -10,7 +10,7 @@ export default mongoose.model(
           lastMessageRead: { type: mongoose.Types.ObjectId },
         },
       ],
-      message: [
+      messages: [
         {
           _id: String,
           user: { type: mongoose.Types.ObjectId, require: true, ref: "users" },

@@ -4,5 +4,6 @@ import RoomController from "../controllers/RoomController";
 const router = Router();
 router.get("/users/:userId", RoomController.getPrivateRoomByUser);
 router.get("/", RoomController.getMyRooms);
+router.get("/:roomId/messages", RoomController.getMesageByGroup);
 
 export default router;

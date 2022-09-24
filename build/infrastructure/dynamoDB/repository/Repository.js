@@ -14,7 +14,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const __1 = __importDefault(require(".."));
 const uuid_1 = require("uuid");
-const tableName = "users";
 class Repository {
     constructor(tableName) {
         this.tableName = tableName;
@@ -22,7 +21,7 @@ class Repository {
     getAll() {
         return __awaiter(this, void 0, void 0, function* () {
             const params = {
-                TableName: tableName,
+                TableName: this.tableName,
             };
             const data = yield __1.default.scan(params).promise();
             return data.Items;
@@ -31,7 +30,7 @@ class Repository {
     getById(id) {
         return __awaiter(this, void 0, void 0, function* () {
             const params = {
-                TableName: tableName,
+                TableName: this.tableName,
                 Key: { id },
             };
             const { Item } = yield __1.default.get(params).promise();
@@ -44,17 +43,11 @@ class Repository {
             if (!e.id) {
                 e.id = (0, uuid_1.v4)();
             }
-            e.test = {
-                value: 1,
-                value2: "sad",
-                test2: {
-                    test: 3,
-                },
-            };
             const params = {
-                TableName: tableName,
+                TableName: this.tableName,
                 Item: e,
             };
+            console.log(params);
             const data = yield __1.default.put(params).promise();
             return entity;
         });
@@ -62,7 +55,7 @@ class Repository {
     deleteById(id) {
         return __awaiter(this, void 0, void 0, function* () {
             const params = {
-                TableName: tableName,
+                TableName: this.tableName,
                 Key: {
                     id,
                 },

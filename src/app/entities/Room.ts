@@ -3,7 +3,7 @@ export interface IRoom {
   _id?: string;
   name?: string;
   avatar?: string;
-  message: IMessage[];
+  messages: IMessage[];
   typeRoom: TypeRoom;
   createdAt?: Date;
   updatedAt?: Date;

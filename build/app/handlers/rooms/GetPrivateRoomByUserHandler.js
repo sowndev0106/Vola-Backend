@@ -13,18 +13,25 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const RoomRepository_1 = __importDefault(require("../../../infrastructure/mongoose/repositories/RoomRepository"));
-const UserRepository_1 = __importDefault(require("../../../infrastructure/mongoose/repositories/UserRepository"));
-const Handler_1 = __importDefault(require("..//Handler"));
+const ValidationError_1 = __importDefault(require("../../errors/ValidationError"));
+const Handler_1 = __importDefault(require("../Handler"));
 class GetMyProfileHandler extends Handler_1.default {
     validate(request) {
-        return __awaiter(this, void 0, void 0, function* () { });
+        return __awaiter(this, void 0, void 0, function* () {
+            const regexIdMongo = /^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/i;
+            if (!request.userId || !regexIdMongo.test(request.userId)) {
+                throw new ValidationError_1.default({ userId: "Id user invalid" });
+            }
+            if (request.myId == request.userId) {
+                throw new ValidationError_1.default({ userId: "Can't get room with your self" });
+            }
+        });
     }
     handle(request) {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.validate(request);
-            const user = yield UserRepository_1.default.findOneById(request.id);
-            const rooms = yield RoomRepository_1.default.getRoomsByUser(request.id, 10, 0);
-            return { user, rooms };
+            const room = yield RoomRepository_1.default.getPrivateRoomByUser(request.myId, request.userId);
+            return room;
         });
     }
 }

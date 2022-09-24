@@ -15,10 +15,10 @@ function default_1(err, req, res, next) {
         case "HeaderTokenInvalidError":
             res.status(403);
             break;
-        // case 'ValidationError':
-        // 	res.status(422);
-        // 	error.error = (err as ValidationError).messageBag;
-        // 	break;
+        case "ValidationError":
+            res.status(422);
+            error.error = err.messageBag;
+            break;
         default:
             res.status(400);
     }

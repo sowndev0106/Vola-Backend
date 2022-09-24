@@ -4,9 +4,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
-const UserController_1 = __importDefault(require("../controllers/UserController"));
+const RoomController_1 = __importDefault(require("../controllers/RoomController"));
 const router = (0, express_1.Router)();
-router.get("/profile", UserController_1.default.getMyProfile);
-router.get("/email/:email", UserController_1.default.getUserByEmail);
-router.get("/:id", UserController_1.default.getUserById);
+router.get("/users/:userId", RoomController_1.default.getPrivateRoomByUser);
+router.get("/", RoomController_1.default.getMyRooms);
 exports.default = router;
