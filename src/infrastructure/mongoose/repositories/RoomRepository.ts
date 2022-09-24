@@ -87,10 +87,9 @@ class RoomRepository extends Repository<IRoom> {
     if (type) {
       select.messages = { $elemMatch: { type: type } };
     }
-    const room = (await RoomModel.findOne(
-      { _id: roomId },
-      select
-    ).exec()) as any;
+    const room = (await RoomModel.findOne({ _id: roomId }, select)
+      .populate("messages.user")
+      .exec()) as any;
     if (!room) return [];
     return room.messages as IMessage[];
   }
