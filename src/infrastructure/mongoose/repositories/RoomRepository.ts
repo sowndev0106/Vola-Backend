@@ -79,17 +79,18 @@ class RoomRepository extends Repository<IRoom> {
     offset: number,
     type: TypeMeesage | null
   ) {
-    let query = { _id: roomId } as any;
-    const select = {
+    let select = {
       __v: 0,
       messages: { $slice: [offset, limit + offset] },
-    };
+    } as any;
 
     if (type) {
-      query.messages = { $elemMatch: { type: type } };
+      select.messages = { $elemMatch: { type: type } };
     }
-    console.log(query);
-    const room = (await RoomModel.findOne(query, select).exec()) as any;
+    const room = (await RoomModel.findOne(
+      { _id: roomId },
+      select
+    ).exec()) as any;
     if (!room) return [];
     return room.messages as IMessage[];
   }
