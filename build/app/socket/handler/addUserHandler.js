@@ -14,7 +14,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const UserRepository_1 = __importDefault(require("../../../infrastructure/mongoose/repositories/UserRepository"));
 const firebase_1 = __importDefault(require("../../../infrastructure/firebase"));
-exports.default = (socketMain, token) => __awaiter(void 0, void 0, void 0, function* () {
+const Client_1 = require("../Client");
+exports.default = ({ token, client }) => __awaiter(void 0, void 0, void 0, function* () {
     const decodeValue = yield firebase_1.default
         .auth()
         .verifyIdToken(token.split(" ")[1]);
@@ -23,5 +24,21 @@ exports.default = (socketMain, token) => __awaiter(void 0, void 0, void 0, funct
     let user = yield UserRepository_1.default.getOneByIdProvider(decodeValue.uid);
     if (!user)
         throw new Error("User not found");
-    socketMain.users.set(user._id, user);
+    const userId = String(user._id);
+    if (client.status == Client_1.StatusClient.Disconect)
+        return;
+    let userDriver = client.socketMain.users.get(userId);
+    if (userDriver) {
+        userDriver.dirver++;
+    }
+    else {
+        userDriver = {
+            dirver: 1,
+            user: user,
+        };
+    }
+    client.socketMain.users.set(userId, userDriver);
+    client.status = Client_1.StatusClient.AsyncUser;
+    client.socket.join(userId); // join socket
+    client.userId = userId;
 });

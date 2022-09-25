@@ -14,7 +14,6 @@ class SocketMain {
             },
         });
         this.users = new Map(); // <userId, User>
-        this.clients = new Map(); // <clientId, UserId>
         this.startSocket();
     }
     startSocket() {
@@ -25,6 +24,10 @@ class SocketMain {
         logger_1.default.info(`Connection from ${client.id}`);
         new Client_1.default(client, this, token);
     }
-    serverSendMessageToUser(user, message) { }
+    serverSendMessageToUsers(userIds, message) {
+        userIds.forEach((e) => {
+            this.io.to(String(e)).emit("server-send-message", message);
+        });
+    }
 }
 exports.default = SocketMain;

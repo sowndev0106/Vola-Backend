@@ -12,7 +12,7 @@ exports.default = mongoose_1.default.model("rooms", new mongoose_1.default.Schem
             lastMessageRead: { type: mongoose_1.default.Types.ObjectId },
         },
     ],
-    message: [
+    messages: [
         {
             _id: String,
             user: { type: mongoose_1.default.Types.ObjectId, require: true, ref: "users" },

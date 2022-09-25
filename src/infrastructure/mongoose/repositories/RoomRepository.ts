@@ -8,7 +8,7 @@ import Repository from "./Repository";
 import RoomModel from "../model/Room";
 import UserModel from "../model/User";
 import UserRepository from "./UserRepository";
-import { IUser } from "../../../app/entities/User";
+import mongoose from "mongoose";
 class RoomRepository extends Repository<IRoom> {
   constructor() {
     super(RoomModel as any);
@@ -79,19 +79,48 @@ class RoomRepository extends Repository<IRoom> {
     offset: number,
     type: TypeMeesage | null
   ) {
-    let select = {
-      __v: 0,
-      messages: { $slice: [offset, limit + offset] },
-    } as any;
+    const aggregates: any[] = [];
+    aggregates.push({ $match: { _id: mongoose.Types.ObjectId(roomId) } });
 
     if (type) {
-      select.messages = { $elemMatch: { type: type } };
+      aggregates.push({
+        $project: {
+          messages: {
+            $filter: {
+              input: "$messages",
+              as: "messages",
+              cond: { $eq: ["$$messages.type", type] },
+            },
+          },
+        },
+      });
     }
-    const room = (await RoomModel.findOne({ _id: roomId }, select)
-      .populate("messages.user")
-      .exec()) as any;
-    if (!room) return [];
-    return room.messages as IMessage[];
+    aggregates.push({ $unwind: "$messages" });
+    aggregates.push({
+      $lookup: {
+        from: "users",
+        localField: "messages.user",
+        foreignField: "_id",
+        as: "messages.user",
+      },
+    });
+    aggregates.push({ $unwind: "$messages.user" });
+    aggregates.push({
+      $project: {
+        _id: "$messages._id",
+        content: "$messages.content",
+        type: "$messages.type",
+        user: "$messages.user",
+        createdAt: "$messages.createdAt",
+      },
+    });
+    aggregates.push({ $sort: { createdAt: 1 } });
+    aggregates.push({ $skip: offset });
+    aggregates.push({ $limit: limit });
+
+    const messages = await RoomModel.aggregate(aggregates).exec();
+    if (!messages) return [];
+    return messages as IMessage[];
   }
 }
 export default new RoomRepository();

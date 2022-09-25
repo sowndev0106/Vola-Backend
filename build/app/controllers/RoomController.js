@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const GetPrivateRoomByUserHandler_1 = __importDefault(require("../handlers/rooms/GetPrivateRoomByUserHandler"));
 const GetMyRoomsHandler_1 = __importDefault(require("../handlers/rooms/GetMyRoomsHandler"));
+const GetMessagesHandler_1 = __importDefault(require("../handlers/rooms/GetMessagesHandler"));
 class UserController {
     // [GET] api/rooms/users/:userId
     getPrivateRoomByUser(req, res, next) {
@@ -35,6 +36,19 @@ class UserController {
                 userId: req.headers.userId,
             };
             const result = yield GetMyRoomsHandler_1.default.handle(request);
+            res.status(200).json(result);
+        });
+    }
+    // [GET] api/rooms/messages
+    getMesageByGroup(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const request = {
+                limit: Number(req.query.limit),
+                page: Number(req.query.page),
+                roomId: req.params.roomId,
+                type: req.query.type,
+            };
+            const result = yield GetMessagesHandler_1.default.handle(request);
             res.status(200).json(result);
         });
     }

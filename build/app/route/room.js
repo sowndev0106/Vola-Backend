@@ -8,4 +8,5 @@ const RoomController_1 = __importDefault(require("../controllers/RoomController"
 const router = (0, express_1.Router)();
 router.get("/users/:userId", RoomController_1.default.getPrivateRoomByUser);
 router.get("/", RoomController_1.default.getMyRooms);
+router.get("/:roomId/messages", RoomController_1.default.getMesageByGroup);
 exports.default = router;

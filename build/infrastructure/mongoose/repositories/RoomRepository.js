@@ -16,6 +16,7 @@ const Room_1 = require("../../../app/entities/Room");
 const Repository_1 = __importDefault(require("./Repository"));
 const Room_2 = __importDefault(require("../model/Room"));
 const UserRepository_1 = __importDefault(require("./UserRepository"));
+const mongoose_1 = __importDefault(require("mongoose"));
 class RoomRepository extends Repository_1.default {
     constructor() {
         super(Room_2.default);
@@ -57,7 +58,7 @@ class RoomRepository extends Repository_1.default {
             if (!room) {
                 // create new room private
                 room = yield this.add({
-                    message: [],
+                    messages: [],
                     users: [{ _id: myId }, { _id: userId }],
                     typeRoom: Room_1.TypeRoom.Private,
                 });
@@ -74,6 +75,24 @@ class RoomRepository extends Repository_1.default {
         return __awaiter(this, void 0, void 0, function* () {
             const room = yield Room_2.default.updateOne({ _id: roomId }, { $push: { messages: message } });
             return message;
+        });
+    }
+    getMessagesByRoom(roomId, limit, offset, type) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let select = {
+                __v: 0,
+                messages: { $slice: [offset, limit + offset] },
+            };
+            if (type) {
+                select.messages = { $elemMatch: { type: type } };
+            }
+            console.log({ _id: roomId });
+            const room = yield Room_2.default.aggregate()
+                .match({ _id: mongoose_1.default.Types.ObjectId("632db4eb9209d46ec01a7433") })
+                .exec();
+            if (!room)
+                return [];
+            return room.messages;
         });
     }
 }
