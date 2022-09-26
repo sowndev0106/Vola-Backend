@@ -24,7 +24,7 @@ export default class Client {
     // add user to list users
     addUserHandler
       .bind(this)({ token, client: this })
-      .catch((err) => this.error(socket, err));
+      .catch((err) => this.error(err));
 
     this.addlistenEvent();
   }
@@ -39,11 +39,14 @@ export default class Client {
   }
 
   onClientSendMessage(data: IClientSendMessage) {
-    clientSendMessageHandler(data, this.socketMain);
+    logger.info(`Client ${this.socket.id} send message`);
+    clientSendMessageHandler(data, this.socketMain).catch((err) =>
+      this.error(err)
+    );
   }
 
-  error(socket: Socket, error: any) {
-    logger.error("Socket error: ", error);
-    socket.emit("error", error);
+  error(error: any) {
+    logger.error(`Socket ${this.socket.id} error: `, error);
+    this.socket.emit("error", error);
   }
 }

@@ -44,6 +44,14 @@ class RoomRepository extends Repository_1.default {
             return Promise.all(result);
         });
     }
+    getRoomSimpleById(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const room = yield Room_2.default.findOne({ _id: id }, { messages: 0 }).exec();
+            if (!room)
+                return null;
+            return room;
+        });
+    }
     getPrivateRoomByUser(myId, userId) {
         return __awaiter(this, void 0, void 0, function* () {
             const user = yield UserRepository_1.default.findOneById(userId);
@@ -73,26 +81,54 @@ class RoomRepository extends Repository_1.default {
     }
     addMessage(message, roomId) {
         return __awaiter(this, void 0, void 0, function* () {
+            message._id = mongoose_1.default.Types.ObjectId().toString();
             const room = yield Room_2.default.updateOne({ _id: roomId }, { $push: { messages: message } });
             return message;
         });
     }
     getMessagesByRoom(roomId, limit, offset, type) {
         return __awaiter(this, void 0, void 0, function* () {
-            let select = {
-                __v: 0,
-                messages: { $slice: [offset, limit + offset] },
-            };
+            const aggregates = [];
+            aggregates.push({ $match: { _id: mongoose_1.default.Types.ObjectId(roomId) } });
             if (type) {
-                select.messages = { $elemMatch: { type: type } };
+                aggregates.push({
+                    $project: {
+                        messages: {
+                            $filter: {
+                                input: "$messages",
+                                as: "messages",
+                                cond: { $eq: ["$$messages.type", type] },
+                            },
+                        },
+                    },
+                });
             }
-            console.log({ _id: roomId });
-            const room = yield Room_2.default.aggregate()
-                .match({ _id: mongoose_1.default.Types.ObjectId("632db4eb9209d46ec01a7433") })
-                .exec();
-            if (!room)
+            aggregates.push({ $unwind: "$messages" });
+            aggregates.push({
+                $lookup: {
+                    from: "users",
+                    localField: "messages.user",
+                    foreignField: "_id",
+                    as: "messages.user",
+                },
+            });
+            aggregates.push({ $unwind: "$messages.user" });
+            aggregates.push({
+                $project: {
+                    _id: "$messages._id",
+                    content: "$messages.content",
+                    type: "$messages.type",
+                    user: "$messages.user",
+                    createdAt: "$messages.createdAt",
+                },
+            });
+            aggregates.push({ $sort: { createdAt: 1 } });
+            aggregates.push({ $skip: offset });
+            aggregates.push({ $limit: limit });
+            const messages = yield Room_2.default.aggregate(aggregates).exec();
+            if (!messages)
                 return [];
-            return room.messages;
+            return messages;
         });
     }
 }

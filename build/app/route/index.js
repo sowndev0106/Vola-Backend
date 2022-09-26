@@ -8,7 +8,9 @@ const authenticate_1 = __importDefault(require("../middleware/authenticate"));
 const handlerError_1 = __importDefault(require("../middleware/handlerError"));
 const user_1 = __importDefault(require("./user"));
 const room_1 = __importDefault(require("./room"));
+const storage_1 = __importDefault(require("./storage"));
 const router = (0, express_1.Router)();
+router.use("/storages", storage_1.default);
 router.use(authenticate_1.default);
 // collect error
 router.use("/users", user_1.default);

@@ -8,7 +8,7 @@ import Repository from "./Repository";
 import RoomModel from "../model/Room";
 import UserModel from "../model/User";
 import UserRepository from "./UserRepository";
-import mongoose from "mongoose";
+import mongoose, { mongo } from "mongoose";
 class RoomRepository extends Repository<IRoom> {
   constructor() {
     super(RoomModel as any);
@@ -37,6 +37,11 @@ class RoomRepository extends Repository<IRoom> {
       return room;
     });
     return Promise.all(result);
+  }
+  async getRoomSimpleById(id: string): Promise<IRoom | null> {
+    const room = await RoomModel.findOne({ _id: id }, { messages: 0 }).exec();
+    if (!room) return null;
+    return room as unknown as IRoom;
   }
   async getPrivateRoomByUser(myId: string, userId: string) {
     const user = await UserRepository.findOneById(userId);
@@ -67,10 +72,12 @@ class RoomRepository extends Repository<IRoom> {
     return room;
   }
   async addMessage(message: IMessage, roomId: string) {
+    message._id = mongoose.Types.ObjectId().toString();
     const room = await RoomModel.updateOne(
       { _id: roomId },
       { $push: { messages: message } }
     );
+    console.log(room);
     return message;
   }
   async getMessagesByRoom(

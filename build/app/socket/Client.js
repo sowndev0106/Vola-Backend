@@ -23,7 +23,7 @@ class Client {
         // add user to list users
         addUserHandler_1.default
             .bind(this)({ token, client: this })
-            .catch((err) => this.error(socket, err));
+            .catch((err) => this.error(err));
         this.addlistenEvent();
     }
     addlistenEvent() {
@@ -35,11 +35,12 @@ class Client {
         logger_1.default.warn(`Diconnect from ${this.socket.id}`);
     }
     onClientSendMessage(data) {
-        (0, clientSendMessageHandler_1.default)(data, this.socketMain);
+        logger_1.default.info(`Client ${this.socket.id} send message`);
+        (0, clientSendMessageHandler_1.default)(data, this.socketMain).catch((err) => this.error(err));
     }
-    error(socket, error) {
-        logger_1.default.error("Socket error: ", error);
-        socket.emit("error", error);
+    error(error) {
+        logger_1.default.error(`Socket ${this.socket.id} error: `, error);
+        this.socket.emit("error", error);
     }
 }
 exports.default = Client;

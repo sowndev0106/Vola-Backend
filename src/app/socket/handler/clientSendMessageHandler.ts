@@ -1,17 +1,31 @@
 import SocketServer from "..";
+import RoomRepository from "../../../infrastructure/mongoose/repositories/RoomRepository";
 import { IMessage, TypeMeesage } from "../../entities/Room";
+import getUserByToken from "../util/getUserByToken";
 
 export interface IClientSendMessage {
   token: string;
-  groupId: string;
+  roomId: string;
   content: string;
 }
-export default (data: IClientSendMessage, socketServer: SocketServer) => {
-  const message: IMessage = {
-    user: "user",
-    content: "content",
+export default async (data: IClientSendMessage, socketServer: SocketServer) => {
+  if (!data.content || !data.content.trim()) return;
+  const user = await getUserByToken(data.token);
+  const message: any = {
+    user: user._id as string,
+    content: data.content,
     type: TypeMeesage.Text,
     createdAt: new Date(),
   };
-  socketServer.serverSendMessageToUsers(["6326c25a880e6552ccfaa26e"], message);
+
+  const room = await RoomRepository.getRoomSimpleById(data.roomId);
+  if (!room) throw new Error("roomId not found");
+
+  // insert database
+  await RoomRepository.addMessage(message, data.roomId);
+
+  // send message socket
+  message.user = user;
+  const users = room.users.map((user) => user._id);
+  socketServer.serverSendMessageToUsers(users, message);
 };
