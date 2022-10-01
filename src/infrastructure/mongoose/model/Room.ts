@@ -8,6 +8,8 @@ export default mongoose.model(
         {
           _id: { type: mongoose.Types.ObjectId, require: true, ref: "users" },
           lastMessageRead: { type: mongoose.Types.ObjectId },
+          deletedAt: Date,
+          missing:{type: Number , default: 0}
         },
       ],
       messages: [

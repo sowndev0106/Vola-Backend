@@ -1,6 +1,7 @@
 import {
   IMessage,
   IRoom,
+  IUserRoom,
   TypeMeesage,
   TypeRoom,
 } from "../../../app/entities/Room";
@@ -71,13 +72,29 @@ class RoomRepository extends Repository<IRoom> {
 
     return room;
   }
-  async addMessage(message: IMessage, roomId: string) {
+  async addMessage(message: IMessage, roomId: string, userSeen:string[]) {
+    var room = await this.getRoomSimpleById(roomId);
     message._id = mongoose.Types.ObjectId().toString();
-    const room = await RoomModel.updateOne(
+    if(!room) throw new Error(`Room ${roomId} does not exist`);
+    console.log(userSeen)
+    const users:IUserRoom[] = room.users.map((user:IUserRoom )=> {
+      console.log(user._id , ' - ', userSeen.includes(user._id))
+      if(userSeen.includes(String(user._id))){
+        // seen message
+        user.lastMessageRead = message._id;
+        user.missing = 0;
+      }else{
+        if(user.missing)
+          user.missing += 1;
+        else 
+          user.missing =1    
+      }
+      return user
+    })
+     await RoomModel.updateOne(
       { _id: roomId },
-      { $push: { messages: message } }
+      { $push: { messages: message } ,$set:{users:users}}
     );
-    console.log(room);
     return message;
   }
   async getMessagesByRoom(

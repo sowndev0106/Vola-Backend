@@ -83,6 +83,7 @@ class RoomRepository extends Repository_1.default {
         return __awaiter(this, void 0, void 0, function* () {
             message._id = mongoose_1.default.Types.ObjectId().toString();
             const room = yield Room_2.default.updateOne({ _id: roomId }, { $push: { messages: message } });
+            console.log(room);
             return message;
         });
     }

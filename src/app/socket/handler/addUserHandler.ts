@@ -1,5 +1,3 @@
-import UserRepository from "../../../infrastructure/mongoose/repositories/UserRepository";
-import firebaseAdmin from "../../../infrastructure/firebase";
 import Client, { StatusClient } from "../Client";
 import getUserByToken from "../util/getUserByToken";
 export interface IAddUser {

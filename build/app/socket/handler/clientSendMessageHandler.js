@@ -25,13 +25,13 @@ exports.default = (data, socketServer) => __awaiter(void 0, void 0, void 0, func
         type: Room_1.TypeMeesage.Text,
         createdAt: new Date(),
     };
-    message.user = user;
     const room = yield RoomRepository_1.default.getRoomSimpleById(data.roomId);
     if (!room)
         throw new Error("roomId not found");
-    // send message socket
-    const users = room.users.map((user) => user._id);
-    socketServer.serverSendMessageToUsers(users, message);
     // insert database
     yield RoomRepository_1.default.addMessage(message, data.roomId);
+    // send message socket
+    message.user = user;
+    const users = room.users.map((user) => user._id);
+    socketServer.serverSendMessageToUsers(users, message);
 });

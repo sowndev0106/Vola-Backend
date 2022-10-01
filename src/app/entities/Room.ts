@@ -12,6 +12,7 @@ export interface IUserRoom {
   _id: string;
   lastMessageRead?: string;
   deletedAt?: Date | null;
+  missing?:number 
 }
 export interface IMessage {
   _id?: string;

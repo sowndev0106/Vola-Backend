@@ -11,6 +11,7 @@ export interface IClientSendMessage {
 export default async (data: IClientSendMessage, socketServer: SocketServer) => {
   if (!data.content || !data.content.trim()) return;
   const user = await getUserByToken(data.token);
+  
   const message: any = {
     user: user._id as string,
     content: data.content,
@@ -22,7 +23,7 @@ export default async (data: IClientSendMessage, socketServer: SocketServer) => {
   if (!room) throw new Error("roomId not found");
 
   // insert database
-  await RoomRepository.addMessage(message, data.roomId);
+  await RoomRepository.addMessage(message, data.roomId, [String(user._id)]);
 
   // send message socket
   message.user = user;

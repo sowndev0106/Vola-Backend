@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 const url = "http://localhost:5000/api";
+const socket = io("http://localhost:5000", { query: `token=${token}` });
 var user;
 var roomId;
 const config = {
@@ -53,7 +54,7 @@ const loadMessage = (room) => __awaiter(void 0, void 0, void 0, function* () {
             return elementReciveMeesage(e.user.avatar, e.content);
         }
     });
-    messages.innerHTML = messagesElement.join();
+    messages.innerHTML = messagesElement.join(" ");
 });
 const elementReciveMeesage = (avatar, content) => {
     return `<div class="incoming_msg">
@@ -83,3 +84,19 @@ const send = () => {
     const result = sendMessageSocket(roomId, content, "text");
     console.log(result);
 };
+// socket
+const sendMessageSocket = (roomId, content, type) => {
+    socket.emit("client-send-message", { token, roomId, content, type });
+};
+socket.on("server-send-message", (data) => {
+    const messages = document.getElementById("messages");
+    // my message
+    var a = messages.innerHTML;
+    if (data.user._id == user._id) {
+        a += elementMyMeesage(data.content);
+    }
+    else {
+        a += elementReciveMeesage(data.user.avatar, data.content);
+    }
+    messages.innerHTML = a;
+});
