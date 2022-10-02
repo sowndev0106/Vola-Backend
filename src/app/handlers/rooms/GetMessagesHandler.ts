@@ -12,6 +12,7 @@ class GetMessagesHandler extends Handler<IGetMessagesHandler> {
   protected async validate(
     request: IGetMessagesHandler
   ): Promise<IGetMessagesHandler> {
+    console.log({ request });
     let { limit, page, roomId, type } = request;
     if (!limit) limit = 10;
     if (!page) page = 1;

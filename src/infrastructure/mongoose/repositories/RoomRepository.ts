@@ -72,14 +72,12 @@ class RoomRepository extends Repository<IRoom> {
 
     return room;
   }
-  async addMessage(message: IMessage, roomId: string, userSeen: string[]) {
+  async addMessage(message: IMessage, roomId: string) {
     var room = await this.getRoomSimpleById(roomId);
     message._id = mongoose.Types.ObjectId().toString();
     if (!room) throw new Error(`Room ${roomId} does not exist`);
-    console.log({ message });
     const users: IUserRoom[] = room.users.map((user: IUserRoom) => {
-      console.log(user._id, " - ", userSeen.includes(user._id));
-      if (userSeen.includes(String(user._id))) {
+      if (message.user == String(user._id)) {
         // seen message
         user.lastMessageRead = message._id;
         user.missing = 0;
@@ -136,13 +134,13 @@ class RoomRepository extends Repository<IRoom> {
         createdAt: "$messages.createdAt",
       },
     });
-    aggregates.push({ $sort: { createdAt: 1 } });
+    aggregates.push({ $sort: { createdAt: -1 } });
     aggregates.push({ $skip: offset });
     aggregates.push({ $limit: limit });
 
     const messages = await RoomModel.aggregate(aggregates).exec();
     if (!messages) return [];
-    return messages as IMessage[];
+    return messages.reverse() as IMessage[];
   }
 }
 export default new RoomRepository();

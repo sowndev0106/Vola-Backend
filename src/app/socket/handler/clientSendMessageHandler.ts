@@ -9,6 +9,7 @@ export interface IClientSendMessage {
   content: string;
 }
 export default async (data: IClientSendMessage, socketServer: SocketServer) => {
+  console.log(data);
   if (!data.content || !data.content.trim()) return;
   const user = await getUserByToken(data.token);
 
@@ -28,5 +29,5 @@ export default async (data: IClientSendMessage, socketServer: SocketServer) => {
   socketServer.serverSendMessageToUsers(users, message, data.roomId);
 
   // insert database
-  await RoomRepository.addMessage(message, data.roomId, [String(user._id)]);
+  await RoomRepository.addMessage(message, data.roomId);
 };

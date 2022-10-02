@@ -79,6 +79,7 @@ const send = () => {
 // socket
 
 const sendMessageSocket = (roomId, content, type) => {
+  console.log({ roomId, content, type });
   socket.emit("client-send-message", { token, roomId, content, type });
 };
 socket.on("server-send-message", (data) => {
