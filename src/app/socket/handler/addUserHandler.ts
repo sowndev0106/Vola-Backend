@@ -6,6 +6,7 @@ export interface IAddUser {
 }
 export default async ({ token, client }: IAddUser) => {
   const user = await getUserByToken(token);
+  console.log(user);
   const userId = String(user._id);
   if (client.status == StatusClient.Disconect) return;
 

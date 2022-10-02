@@ -19,7 +19,8 @@ new Socket(server);
 
 app.use(morgan("dev"));
 
-app.use(express.json());
+app.use(express.json()); // for parsing application/json
+app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
 // Security
 app.use(

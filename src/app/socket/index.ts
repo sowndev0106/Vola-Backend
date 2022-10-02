@@ -39,9 +39,13 @@ export default class SocketMain {
 
     new Client(client, this, token);
   }
-  serverSendMessageToUsers(userIds: string[], message: IMessage) {
+  serverSendMessageToUsers(
+    userIds: string[],
+    message: IMessage,
+    roomId: string
+  ) {
     userIds.forEach((e) => {
-      this.io.to(String(e)).emit("server-send-message", message);
+      this.io.to(String(e)).emit("server-send-message", { message, roomId });
     });
   }
 }
