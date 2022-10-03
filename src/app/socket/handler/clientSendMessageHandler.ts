@@ -9,7 +9,6 @@ export interface IClientSendMessage {
   content: string;
 }
 export default async (data: IClientSendMessage, socketServer: SocketServer) => {
-  console.log(data);
   if (!data.content || !data.content.trim()) return;
   const user = await getUserByToken(data.token);
 

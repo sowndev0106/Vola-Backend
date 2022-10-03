@@ -79,17 +79,16 @@ const send = () => {
 // socket
 
 const sendMessageSocket = (roomId, content, type) => {
-  console.log({ roomId, content, type });
   socket.emit("client-send-message", { token, roomId, content, type });
 };
 socket.on("server-send-message", (data) => {
   const messages = document.getElementById("messages");
   // my message
   var a = messages.innerHTML;
-  if (data.user._id == user._id) {
-    a += elementMyMeesage(data.content);
+  if (data.message.user._id == user._id) {
+    a += elementMyMeesage(data.message.content);
   } else {
-    a += elementReciveMeesage(data.user.avatar, data.content);
+    a += elementReciveMeesage(data.message.user.avatar, data.message.content);
   }
   messages.innerHTML = a;
 });

@@ -49,7 +49,6 @@ class CreateGroupRoomHandler extends Handler<ICreateGroupRoomHandler> {
       avatar: request.avatar,
       name: request.name,
     };
-    console.log(room);
     const result = await RoomRepository.add(room);
 
     return result;
