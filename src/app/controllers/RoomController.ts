@@ -4,8 +4,9 @@ import CreateGroupRoomHandler from "../handlers/rooms/CreateGroupRoomHandler";
 import GetMyRoomsHandler from "../handlers/rooms/GetMyRoomsHandler";
 import { IMessage } from "../entities/Room";
 import GetMessagesHandler from "../handlers/rooms/GetMessagesHandler";
+import AddUserIntoRoomHannler from "../handlers/rooms/AddUserIntoRoomHannler";
 
-class UserController {
+class RoomController {
   // [GET] api/rooms/users/:userId
   async getPrivateRoomByUser(req: Request, res: Response, next: NextFunction) {
     const request = {
@@ -24,6 +25,15 @@ class UserController {
       avatar: req.body.avatar,
     };
     const result = await CreateGroupRoomHandler.handle(request);
+    res.status(200).json(result);
+  }
+  // [PUT] api/rooms
+  async addUserIntoRoom(req: Request, res: Response, next: NextFunction) {
+    const request = {
+      userId: req.params.userId,
+      roomId: req.params.roomId,
+    };
+    const result = await AddUserIntoRoomHannler.handle(request);
     res.status(200).json(result);
   }
   // [GET] api/rooms
@@ -49,4 +59,4 @@ class UserController {
   }
   async addMeesage(req: Request, res: Response, next: NextFunction) {}
 }
-export default new UserController();
+export default new RoomController();

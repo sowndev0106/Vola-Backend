@@ -1,5 +1,7 @@
+import CollectErrors from "../errors/CollectErrors";
+
 export default abstract class Handler<Request> {
-  //   @inject("ErrorCollector") protected _ec!: ErrorCollector;
+  protected _colectErrors: CollectErrors = new CollectErrors();
   protected abstract validate(request: Request): Promise<any>;
   public abstract handle(request: Request): Promise<null>;
 }

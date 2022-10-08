@@ -93,6 +93,18 @@ class RoomRepository extends Repository<IRoom> {
     );
     return message;
   }
+  async addUserIntoRoom(userId:string, roomId: string) {
+    var room = await this.getRoomSimpleById(roomId);
+    if (!room) throw new Error(`Room ${roomId} does not exist`);
+    const userExist= room.users.find((e)=>e._id == userId);
+    if(userExist) throw new Error("User exist in room")
+    await RoomModel.updateOne(
+      { _id: roomId },
+      { $push: { users: {_id:userId}} }
+    );
+    room.users.push({_id:userId});
+    return room;
+  }
   async getMessagesByRoom(
     roomId: string,
     limit: number,

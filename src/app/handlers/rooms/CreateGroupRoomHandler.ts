@@ -25,13 +25,14 @@ class CreateGroupRoomHandler extends Handler<ICreateGroupRoomHandler> {
     if (!request.name) {
       throw new ValidationError({ name: "name is require" });
     }
-    const ids = new Set(request.userIds); // remove element duplicated
+    const ids = Array.from(new Set(request.userIds)) // remove element duplicated
     const idsValidated: Array<{ _id: string }> = [];
-    ids.forEach(async (e) => {
-      if (e == request.myId) return;
-      const id = await this.checKValidateUserId(e);
+    for (let index = 0; index < ids.length; index++) {
+      if (ids[index] == request.myId) continue;
+      const id = await this.checKValidateUserId(ids[index]);
       id && idsValidated.push({ _id: id });
-    });
+    }
+    
     idsValidated.push({ _id: request.myId });
     return {
       userIds: idsValidated,

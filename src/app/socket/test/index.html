@@ -1,24 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+   <meta charset="UTF-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Document</title>
 </head>
+
 <body>
    <img src="https://vola-cnm.s3.ap-southeast-1.amazonaws.com/c53d446c-134c-4486-bdc0-506f6f05ad9d.jpeg" alt="">
 </body>
 <script src="http://localhost:5000/socket.io/socket.io.js"></script>
 <script>
-   
+
    const token = 'Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IjIxZTZjMGM2YjRlMzA5NTI0N2MwNjgwMDAwZTFiNDMxODIzODZkNTAiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoiU8ahbiBOZ3V54buFbiBUaGFuaCIsInBpY3R1cmUiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS0vQUZkWnVjckR5dnc4c0dLZ0dJWWxZZUJQVEFyUUl6b0RMNWt4bmVaX25OYTZFUT1zOTYtYyIsImlzcyI6Imh0dHBzOi8vc2VjdXJldG9rZW4uZ29vZ2xlLmNvbS92b2xvLTNiZTdjIiwiYXVkIjoidm9sby0zYmU3YyIsImF1dGhfdGltZSI6MTY2NDExODc0MywidXNlcl9pZCI6ImR3OHgwOXFpRHNibmtoTkpqUWZUdTI1REFYaDIiLCJzdWIiOiJkdzh4MDlxaURzYm5raE5KalFmVHUyNURBWGgyIiwiaWF0IjoxNjY0MTE4NzQzLCJleHAiOjE2NjQxMjIzNDMsImVtYWlsIjoibmd1eWVudGhhbmhzb24xNjIwMDFAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnsiZ29vZ2xlLmNvbSI6WyIxMTIyNDg1MzQyOTQxNjc4MjQ3NzEiXSwiZW1haWwiOlsibmd1eWVudGhhbmhzb24xNjIwMDFAZ21haWwuY29tIl19LCJzaWduX2luX3Byb3ZpZGVyIjoiZ29vZ2xlLmNvbSJ9fQ.rETImBlRp0q31dS1M12h2DfM2FOICmUIo0-ie2SCfLtFOtheUIONpA8QG3qIAXIJ8C3YqM9bzlr4sSAN6vMmoDg33juwISezWIw4XXaEXdEg7QVSqDiHYhaOgfuMoCoIuUh9dQUFAV4NfnSzvbppJkhspr7c_wEeOI6nyF8jwBSk7N4hEH40W6TA6htqv01p1p5g1CEJSz2QnpxHEFquAkaTPZvcNZl2izltN3S00px0EsjPOXhH_fBZKAo42Q2K0aWbtiurYGAMpb5FdnDIKRCoDAShS4-lKCjCKAUGE03e12psSkjVM4socqWtoxIwJokvXB92Ljbx5mlTJTugsg'
-   const socket = io("http://localhost:5000",{query:`token=${token}`});
-   const sendMessage=( roomId, content,type)=>{
-      socket.emit('client-send-message', {token, roomId, content,type});
+   const socket = io("http://localhost:5000", { query: `token=${token}` });
+   const sendMessage = (roomId, content, type) => {
+      socket.emit('client-send-message', { token, roomId, content, type });
    }
-   socket.on("server-send-message",(data)=>{
+   socket.on("server-send-message", (data) => {
       console.log(data)
    })
 </script>
+
 </html>

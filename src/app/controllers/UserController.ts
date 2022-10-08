@@ -14,6 +14,14 @@ class UserController {
     const result = await GetMyProfileHandler.handle(request);
     res.status(200).json(result);
   }
+   // [PUT] api/users/profile
+   async updateMyProfile(req: Request, res: Response, next: NextFunction) {
+    const request: IGetMyProfileRequest = {
+      id: req.headers.userId as string,
+    };
+    const result = await GetMyProfileHandler.handle(request);
+    res.status(200).json(result);
+  }
   // [GET] api/users/email/:email
   async getUserByEmail(req: Request, res: Response, next: NextFunction) {
     const email = req.params.email as string;

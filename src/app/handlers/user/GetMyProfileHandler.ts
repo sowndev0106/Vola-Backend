@@ -7,7 +7,6 @@ export interface IGetMyProfileRequest {
 }
 class GetMyProfileHandler extends Handler<IGetMyProfileRequest> {
   protected async validate(request: IGetMyProfileRequest) {}
-
   public async handle(request: IGetMyProfileRequest): Promise<any> {
     await this.validate(request);
     const user = await UserRepository.findOneById(request.id);
@@ -15,5 +14,4 @@ class GetMyProfileHandler extends Handler<IGetMyProfileRequest> {
     return { user, rooms };
   }
 }
-
 export default new GetMyProfileHandler();
