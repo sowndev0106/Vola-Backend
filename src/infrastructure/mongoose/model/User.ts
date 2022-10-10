@@ -11,6 +11,27 @@ export default mongoose.model(
       phone: String,
       sex: Boolean,
       dateOfBirth: Date,
+      friendInvites: [
+        {
+          userId: {
+            type: mongoose.Types.ObjectId,
+            require: true,
+            ref: "users",
+          },
+          message: String,
+          createdAt: { type: Date, default: new Date() },
+        },
+      ],
+      friends: [
+        {
+          userId: {
+            type: mongoose.Types.ObjectId,
+            require: true,
+            ref: "users",
+          },
+          createdAt: { type: Date, default: new Date() },
+        },
+      ],
     },
     {
       timestamps: true,

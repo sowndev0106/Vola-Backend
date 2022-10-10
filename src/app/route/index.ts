@@ -4,11 +4,14 @@ import handlerError from "../middleware/handlerError";
 import userRoute from "./user";
 import roomRoute from "./room";
 import storageRoute from "./storage";
+import authRoute from "./auth";
 
 const router = Router();
-router.use("/storages", storageRoute);
+
+router.use("/auth", authRoute);
 router.use(authenticate);
-// collect error
+
+router.use("/storages", storageRoute);
 router.use("/users", userRoute);
 router.use("/rooms", roomRoute);
 
@@ -16,6 +19,7 @@ router.use("/error", () => {
   throw new Error("loi ne ");
 });
 
+// collect error
 router.use(handlerError);
 
 export default router;

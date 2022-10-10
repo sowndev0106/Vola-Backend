@@ -19,11 +19,8 @@ export default class Repository<E> {
   }
 
   async update(entity: E): Promise<E> {
-    const { id } = entity as any;
-    let doc = await this._model.findOne({ _id: id }).exec();
-    if (doc === null) throw new Error("doc not found ");
-    await doc.save();
-
+    const { _id } = entity as any;
+    let doc = await this._model.updateOne({ _id: _id }, entity as any).exec();
     return entity;
   }
 

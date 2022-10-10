@@ -13,7 +13,7 @@ class GetMyProfileHandler extends Handler<IGetMyProfileRequest> {
 
   public async handle(request: IGetMyProfileRequest): Promise<any> {
     await this.validate(request);
-    const user = await UserRepository.getOneByEmail(request.email);
+    const user = await UserRepository.getUsersByEmail(request.email);
     if (!user) throw new Error("Email not found");
     return user;
   }

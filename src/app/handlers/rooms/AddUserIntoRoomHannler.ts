@@ -1,9 +1,6 @@
-import Room from "../../../infrastructure/mongoose/model/Room";
 import RoomRepository from "../../../infrastructure/mongoose/repositories/RoomRepository";
 import UserRepository from "../../../infrastructure/mongoose/repositories/UserRepository";
 import StringValidate from "../../../util/validate/StringValidate";
-import { IRoom, TypeRoom } from "../../entities/Room";
-import { IUser } from "../../entities/User";
 import ValidationError from "../../errors/ValidationError";
 import Handler from "../Handler";
 
@@ -27,6 +24,7 @@ class AddUserIntoRoomHandler extends Handler<IAddUserIntoRoomHandler> {
     return {userId,
       roomId}
 }
+
 
   public async handle(request: IAddUserIntoRoomHandler): Promise<any> {
     const input = await this.validate(request);

@@ -1,14 +1,9 @@
-export interface IFriend {
-  userSend: string;
-  useRevice: string;
-  message: string;
-  status: StatusFriend;
+export interface IFriendInvite {
+  userId: string;
+  message?: string;
   createdAt?: Date;
-  updatedAt?: Date;
 }
-export enum StatusFriend {
-  Accepted,
-  UnAccepted,
-  Stranger,
-  Deny,
+export interface IFriend {
+  userId: string;
+  createdAt?: Date;
 }
