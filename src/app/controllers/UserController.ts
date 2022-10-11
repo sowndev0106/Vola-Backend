@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import GetFriendsHandler from "../handlers/friend/GetFriendsHandler";
 import SendFriendInviteHandler from "../handlers/friend/SendFriendInviteHandler";
 import GetMyProfileHandler, {
   IGetMyProfileRequest,
@@ -56,6 +57,14 @@ class UserController {
       message: req.body.message,
     };
     const result = await SendFriendInviteHandler.handle(request);
+    res.status(200).json(result);
+  }
+  // [GET] api/users/friends
+  async getListFriends(req: Request, res: Response, next: NextFunction) {
+    const request = {
+      myId: req.headers.userId as string,
+    };
+    const result = await GetFriendsHandler.handle(request);
     res.status(200).json(result);
   }
 }
