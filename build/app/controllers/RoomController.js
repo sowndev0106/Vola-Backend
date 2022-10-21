@@ -13,9 +13,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const GetPrivateRoomByUserHandler_1 = __importDefault(require("../handlers/rooms/GetPrivateRoomByUserHandler"));
+const CreateGroupRoomHandler_1 = __importDefault(require("../handlers/rooms/CreateGroupRoomHandler"));
 const GetMyRoomsHandler_1 = __importDefault(require("../handlers/rooms/GetMyRoomsHandler"));
 const GetMessagesHandler_1 = __importDefault(require("../handlers/rooms/GetMessagesHandler"));
-class UserController {
+const AddUserIntoRoomHannler_1 = __importDefault(require("../handlers/rooms/AddUserIntoRoomHannler"));
+class RoomController {
     // [GET] api/rooms/users/:userId
     getPrivateRoomByUser(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -24,6 +26,30 @@ class UserController {
                 userId: req.params.userId,
             };
             const result = yield GetPrivateRoomByUserHandler_1.default.handle(request);
+            res.status(200).json(result);
+        });
+    }
+    // [POST] api/rooms
+    createGroupRoomByUser(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const request = {
+                myId: req.headers.userId,
+                userIds: req.body.userIds,
+                name: req.body.name,
+                avatar: req.body.avatar,
+            };
+            const result = yield CreateGroupRoomHandler_1.default.handle(request);
+            res.status(200).json(result);
+        });
+    }
+    // [PUT] api/rooms
+    addUserIntoRoom(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const request = {
+                userId: req.params.userId,
+                roomId: req.params.roomId,
+            };
+            const result = yield AddUserIntoRoomHannler_1.default.handle(request);
             res.status(200).json(result);
         });
     }
@@ -56,4 +82,4 @@ class UserController {
         return __awaiter(this, void 0, void 0, function* () { });
     }
 }
-exports.default = new UserController();
+exports.default = new RoomController();

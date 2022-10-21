@@ -26,12 +26,42 @@ class UserRepository extends Repository_1.default {
             return user;
         });
     }
-    getOneByEmail(email) {
+    getUsersByEmail(email) {
         return __awaiter(this, void 0, void 0, function* () {
-            const user = yield User_1.default.findOne({ email }).exec();
+            const user = yield User_1.default.find({ email }).exec();
             if (!user)
                 return null;
             return user;
+        });
+    }
+    GetOnePopulate(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const user = yield User_1.default.findOne({ _id: id })
+                .populate({
+                path: "friends.userId",
+                select: "_id email email avatar name",
+            })
+                .populate({
+                path: "friendInvites.userId",
+                select: "_id email email avatar name",
+            })
+                .exec();
+            if (!user)
+                return null;
+            return user;
+        });
+    }
+    GetFriends(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const user = yield User_1.default.findOne({ _id: id })
+                .populate({
+                path: "friends.userId",
+                select: "_id email email avatar name",
+            })
+                .exec();
+            if (!user)
+                return null;
+            return user.friends;
         });
     }
 }

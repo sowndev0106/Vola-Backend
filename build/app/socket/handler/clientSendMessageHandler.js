@@ -28,10 +28,10 @@ exports.default = (data, socketServer) => __awaiter(void 0, void 0, void 0, func
     const room = yield RoomRepository_1.default.getRoomSimpleById(data.roomId);
     if (!room)
         throw new Error("roomId not found");
-    // insert database
-    yield RoomRepository_1.default.addMessage(message, data.roomId);
     // send message socket
     message.user = user;
     const users = room.users.map((user) => user._id);
-    socketServer.serverSendMessageToUsers(users, message);
+    socketServer.serverSendMessageToUsers(users, message, data.roomId);
+    // insert database
+    yield RoomRepository_1.default.addMessage(message, data.roomId);
 });

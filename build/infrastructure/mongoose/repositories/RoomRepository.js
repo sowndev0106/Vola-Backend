@@ -81,10 +81,39 @@ class RoomRepository extends Repository_1.default {
     }
     addMessage(message, roomId) {
         return __awaiter(this, void 0, void 0, function* () {
+            var room = yield this.getRoomSimpleById(roomId);
             message._id = mongoose_1.default.Types.ObjectId().toString();
-            const room = yield Room_2.default.updateOne({ _id: roomId }, { $push: { messages: message } });
-            console.log(room);
+            if (!room)
+                throw new Error(`Room ${roomId} does not exist`);
+            const users = room.users.map((user) => {
+                if (message.user == String(user._id)) {
+                    // seen message
+                    user.lastMessageRead = message._id;
+                    user.missing = 0;
+                }
+                else {
+                    if (user.missing)
+                        user.missing += 1;
+                    else
+                        user.missing = 1;
+                }
+                return user;
+            });
+            yield Room_2.default.updateOne({ _id: roomId }, { $push: { messages: message }, $set: { users: users } });
             return message;
+        });
+    }
+    addUserIntoRoom(userId, roomId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            var room = yield this.getRoomSimpleById(roomId);
+            if (!room)
+                throw new Error(`Room ${roomId} does not exist`);
+            const userExist = room.users.find((e) => e._id == userId);
+            if (userExist)
+                throw new Error("User exist in room");
+            yield Room_2.default.updateOne({ _id: roomId }, { $push: { users: { _id: userId } } });
+            room.users.push({ _id: userId });
+            return room;
         });
     }
     getMessagesByRoom(roomId, limit, offset, type) {
@@ -123,13 +152,13 @@ class RoomRepository extends Repository_1.default {
                     createdAt: "$messages.createdAt",
                 },
             });
-            aggregates.push({ $sort: { createdAt: 1 } });
+            aggregates.push({ $sort: { createdAt: -1 } });
             aggregates.push({ $skip: offset });
             aggregates.push({ $limit: limit });
             const messages = yield Room_2.default.aggregate(aggregates).exec();
             if (!messages)
                 return [];
-            return messages;
+            return messages.reverse();
         });
     }
 }

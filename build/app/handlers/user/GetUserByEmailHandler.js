@@ -25,7 +25,7 @@ class GetMyProfileHandler extends Handler_1.default {
     handle(request) {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.validate(request);
-            const user = yield UserRepository_1.default.getOneByEmail(request.email);
+            const user = yield UserRepository_1.default.getUsersByEmail(request.email);
             if (!user)
                 throw new Error("Email not found");
             return user;

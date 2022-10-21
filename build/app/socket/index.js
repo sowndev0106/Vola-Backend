@@ -24,9 +24,9 @@ class SocketMain {
         logger_1.default.info(`Connection from ${client.id}`);
         new Client_1.default(client, this, token);
     }
-    serverSendMessageToUsers(userIds, message) {
+    serverSendMessageToUsers(userIds, message, roomId) {
         userIds.forEach((e) => {
-            this.io.to(String(e)).emit("server-send-message", message);
+            this.io.to(String(e)).emit("server-send-message", { message, roomId });
         });
     }
 }

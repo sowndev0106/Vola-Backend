@@ -10,6 +10,8 @@ exports.default = mongoose_1.default.model("rooms", new mongoose_1.default.Schem
         {
             _id: { type: mongoose_1.default.Types.ObjectId, require: true, ref: "users" },
             lastMessageRead: { type: mongoose_1.default.Types.ObjectId },
+            deletedAt: Date,
+            missing: { type: Number, default: 0 }
         },
     ],
     messages: [

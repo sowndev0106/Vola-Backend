@@ -12,13 +12,26 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const Handler_1 = __importDefault(require("../Handler"));
-class AddMessageHandler extends Handler_1.default {
+const Handler_1 = __importDefault(require("..//Handler"));
+const auth_1 = require("@firebase/auth");
+const firebaseConfigClient_1 = require("..//..//..//infrastructure/firebase/firebaseConfigClient");
+class LoginHandler extends Handler_1.default {
+    static handle() {
+        throw new Error("Method not implemented.");
+    }
     validate(request) {
-        return __awaiter(this, void 0, void 0, function* () { });
+        return __awaiter(this, void 0, void 0, function* () {
+            const { email, password } = request;
+            return { email, password };
+        });
     }
     handle(request) {
-        return __awaiter(this, void 0, void 0, function* () { });
+        return __awaiter(this, void 0, void 0, function* () {
+            const { email, password } = yield this.validate(request);
+            const auth = (0, auth_1.getAuth)(firebaseConfigClient_1.app);
+            const user = yield (0, auth_1.signInWithEmailAndPassword)(auth, email, password);
+            return user;
+        });
     }
 }
-exports.default = new AddMessageHandler();
+exports.default = new LoginHandler();

@@ -20,7 +20,8 @@ app.use((0, cors_1.default)());
 // config socket
 new socket_1.default(server);
 app.use((0, morgan_1.default)("dev"));
-app.use(express_1.default.json());
+app.use(express_1.default.json()); // for parsing application/json
+app.use(express_1.default.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 // Security
 app.use((0, helmet_1.default)({
     contentSecurityPolicy: false,

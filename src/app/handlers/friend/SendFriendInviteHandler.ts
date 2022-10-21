@@ -25,13 +25,15 @@ class SendFriendInviteHandlerHandler extends Handler<ISendFriendInviteHandlerReq
     const userId = this._colectErrors.collect("userId", () =>
       IdValidate(request.userId)
     );
+    console.log(request);
     if (this._colectErrors.hasError()) {
       throw new ValidationError(this._colectErrors.errors);
     }
     // not require
-    const message = this._colectErrors.collect("message", () =>
-      StringValidate(request.message)
-    );
+    // const message = this._colectErrors.collect("message", () =>
+    //   StringValidate(request.message)
+    // );
+    const message = "";
     return { myId: request.myId, userId, message };
   }
   public async handle(request: ISendFriendInviteHandlerRequest): Promise<any> {

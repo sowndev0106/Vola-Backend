@@ -12,20 +12,33 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const RoomRepository_1 = __importDefault(require("../../../infrastructure/mongoose/repositories/RoomRepository"));
-const UserRepository_1 = __importDefault(require("../../../infrastructure/mongoose/repositories/UserRepository"));
-const Handler_1 = __importDefault(require("..//Handler"));
-class GetMyProfileHandler extends Handler_1.default {
+const StringValidate_1 = __importDefault(require("../../../util/validate/StringValidate"));
+const Handler_1 = __importDefault(require("../Handler"));
+class UpdateMyProfileHandler extends Handler_1.default {
     validate(request) {
-        return __awaiter(this, void 0, void 0, function* () { });
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = this._colectErrors.collect("id", () => (0, StringValidate_1.default)(request._id));
+            const name = this._colectErrors.collect("name", () => (0, StringValidate_1.default)(request.name));
+            const avatar = this._colectErrors.collect("avatar", () => (0, StringValidate_1.default)(request.avatar));
+            return name;
+        });
     }
     handle(request) {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.validate(request);
-            const user = yield UserRepository_1.default.GetOnePopulate(request.id);
-            const rooms = yield RoomRepository_1.default.getRoomsByUser(request.id, 10, 0);
-            return { user, rooms };
+            // const user = await UserRepository.findOneById(request._id);
+            // const rooms = await RoomRepository.getRoomsByUser(request., 10, 0);
+            // return { user, rooms };
         });
     }
 }
-exports.default = new GetMyProfileHandler();
+exports.default = new UpdateMyProfileHandler();
+// _id?: string;
+// name: string;
+// avatar?: string;
+// email: string;
+// provider: string;
+// idProvider: string;
+// phone?: string;
+// sex?: boolean;
+// dateOfBirth?: Date;

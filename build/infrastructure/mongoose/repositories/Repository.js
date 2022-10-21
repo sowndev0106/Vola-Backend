@@ -28,11 +28,8 @@ class Repository {
     }
     update(entity) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { id } = entity;
-            let doc = yield this._model.findOne({ _id: id }).exec();
-            if (doc === null)
-                throw new Error("doc not found ");
-            yield doc.save();
+            const { _id } = entity;
+            let doc = yield this._model.updateOne({ _id: _id }, entity).exec();
             return entity;
         });
     }
