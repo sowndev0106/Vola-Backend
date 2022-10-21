@@ -29,9 +29,8 @@ class UserController {
   async getUserByEmail(req: Request, res: Response, next: NextFunction) {
     const email = req.params.email as string;
     const result = await GetUserByEmailHandler.handle({ email });
-    const { __v, idProvider, createdAt, updatedAt, ...props } = result._doc;
     res.status(200).json({
-      ...props,
+      result,
     });
   }
   // [GET] api/users/:id

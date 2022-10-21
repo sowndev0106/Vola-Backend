@@ -9,7 +9,7 @@ import authRoute from "./auth";
 const router = Router();
 
 router.use("/auth", authRoute);
-router.use(authenticate);
+// router.use(authenticate);
 
 router.use("/storages", storageRoute);
 router.use("/users", userRoute);
