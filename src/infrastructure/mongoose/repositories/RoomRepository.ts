@@ -28,7 +28,9 @@ class RoomRepository extends Repository<IRoom> {
       if (room.typeRoom == TypeRoom.Private) {
         // because Private room only 2 user and we find user disserent me
         const id =
-          room.users[0]._id == userId ? room.users[0]._id : room.users[1]._id;
+          String(room.users[0]._id) == String(userId)
+            ? room.users[1]._id
+            : room.users[0]._id;
         // add avatar and different with my user
         const user = await UserRepository.findOneById(id);
         room.avatar = user?.avatar;

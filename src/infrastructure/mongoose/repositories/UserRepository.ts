@@ -11,10 +11,19 @@ class UserRepository extends Repository<IUser> {
     if (!user) return null;
     return user as any;
   }
-  async getUsersByEmail(email: string): Promise<IUser[] | null> {
-    const user = await UserModel.find({ email }).exec();
-    if (!user) return null;
-    return user as any;
+  async getUsersByEmail(email: string, myId: string): Promise<IUser[] | null> {
+    const users = await UserModel.find({ email, _id: { $ne: myId } }).exec();
+    if (!users) return null;
+    const result = users.map((e: any) => {
+      const doc = e._doc;
+      const isFriend = !!e?.friends?.find(
+        (friend: any) => String(friend.userId) === String(myId)
+      );
+      doc.isFriend = isFriend;
+      return doc;
+    });
+    // console.log(result);
+    return result as any;
   }
   async GetOnePopulate(id: string): Promise<IUser[] | null> {
     const user = await UserModel.findOne({ _id: id })

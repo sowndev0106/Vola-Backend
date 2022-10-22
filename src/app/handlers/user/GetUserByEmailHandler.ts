@@ -3,6 +3,7 @@ import UserRepository from "../../../infrastructure/mongoose/repositories/UserRe
 import Handler from "../Handler";
 export interface IGetMyProfileRequest {
   email: string;
+  myId: string;
 }
 class GetMyProfileHandler extends Handler<IGetMyProfileRequest> {
   protected async validate(request: IGetMyProfileRequest) {
@@ -13,7 +14,10 @@ class GetMyProfileHandler extends Handler<IGetMyProfileRequest> {
 
   public async handle(request: IGetMyProfileRequest): Promise<any> {
     await this.validate(request);
-    const user = await UserRepository.getUsersByEmail(request.email);
+    const user = await UserRepository.getUsersByEmail(
+      request.email,
+      request.myId
+    );
     if (!user) throw new Error("Email not found");
     return user;
   }

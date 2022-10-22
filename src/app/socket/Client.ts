@@ -17,20 +17,24 @@ export default class Client {
   status: StatusClient;
   userId = "";
 
-  constructor(socket: Socket, socketMain: SocketMain, token: string) {
+  constructor(socket: Socket, socketMain: SocketMain) {
     this.socket = socket;
     this.socketMain = socketMain;
     this.status = StatusClient.Connect; // default
-    // add user to list users
-    addUserHandler
-      .bind(this)({ token, client: this })
-      .catch((err) => this.error(err));
 
     this.addlistenEvent();
   }
+
   addlistenEvent() {
     this.socket.on("client-send-message", this.onClientSendMessage.bind(this));
     this.socket.on("disconnect", this.onDiscornect.bind(this));
+    this.socket.on("start", this.start.bind(this));
+  }
+  start(data: any) {
+    // add user to list users
+    addUserHandler
+      .bind(this)({ token: data.token, client: this })
+      .catch((err) => this.error(err));
   }
 
   onDiscornect() {

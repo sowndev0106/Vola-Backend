@@ -30,14 +30,13 @@ export default class SocketMain {
   }
 
   private startSocket() {
-    this.io.on("connection", this.onConnection.bind(this));
+    // this.io.on("connection", this.onConnection.bind(this));
+    this.io.on("connect", this.onConnection.bind(this));
   }
 
   private onConnection(client: Socket) {
-    const { token } = client.handshake.query as { token: string };
     logger.info(`Connection from ${client.id}`);
-
-    new Client(client, this, token);
+    new Client(client, this);
   }
   serverSendMessageToUsers(
     userIds: string[],
