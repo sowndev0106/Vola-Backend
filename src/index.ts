@@ -8,9 +8,15 @@ import route from "./app/route";
 import "./infrastructure/mongoose";
 import http from "http";
 import Socket from "./app/socket";
+import fs from "fs";
+import https from "https";
 const port = Number(process.env.PORT || 5000);
 const app = express();
-const server = http.createServer(app);
+const options = {
+  key: fs.readFileSync("ssl/key.pem"),
+  cert: fs.readFileSync("ssl/cert.pem"),
+};
+const server = https.createServer(options, app);
 
 app.use(cors());
 
