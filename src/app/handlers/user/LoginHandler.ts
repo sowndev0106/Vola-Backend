@@ -30,14 +30,14 @@ class LoginHandler extends Handler<ILoginRequest> {
   public async handle(request: ILoginRequest): Promise<any> {
     const { email, password } = await this.validate(request);
     const auth = getAuth(app);
-    const userCreate = await createUserWithEmailAndPassword(
-      auth,
-      email,
-      password
-    );
-    sendEmailVerification(userCreate.user);
-    // const user = await signInWithEmailAndPassword(auth, email, password);
-    return userCreate;
+    // const userCreate = await createUserWithEmailAndPassword(
+    //   auth,
+    //   email,
+    //   password
+    // );
+    // sendEmailVerification(userCreate.user);
+    const user = await signInWithEmailAndPassword(auth, email, password);
+    return user;
   }
 }
 export default new LoginHandler();
