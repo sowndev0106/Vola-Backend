@@ -13,8 +13,13 @@ const route_1 = __importDefault(require("./app/route"));
 require("./infrastructure/mongoose");
 const http_1 = __importDefault(require("http"));
 const socket_1 = __importDefault(require("./app/socket"));
+const fs_1 = __importDefault(require("fs"));
 const port = Number(process.env.PORT || 5000);
 const app = (0, express_1.default)();
+const options = {
+    key: fs_1.default.readFileSync("ssl/key.pem"),
+    cert: fs_1.default.readFileSync("ssl/cert.pem"),
+};
 const server = http_1.default.createServer(app);
 app.use((0, cors_1.default)());
 // config socket

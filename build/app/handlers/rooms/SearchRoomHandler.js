@@ -12,23 +12,32 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const UserRepository_1 = __importDefault(require("../../../infrastructure/mongoose/repositories/UserRepository"));
+const RoomRepository_1 = __importDefault(require("../../../infrastructure/mongoose/repositories/RoomRepository"));
+const StringValidate_1 = __importDefault(require("../../../util/validate/StringValidate"));
+const ValidationError_1 = __importDefault(require("../../errors/ValidationError"));
 const Handler_1 = __importDefault(require("../Handler"));
 class GetMyProfileHandler extends Handler_1.default {
     validate(request) {
         return __awaiter(this, void 0, void 0, function* () {
-            const regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-            if (!request.email || !regexEmail.test(request.email))
-                throw new Error("Email invalid");
+            const q = this._colectErrors.collect("q", () => (0, StringValidate_1.default)(request.q));
+            if (this._colectErrors.hasError()) {
+                throw new ValidationError_1.default(this._colectErrors.errors);
+            }
+            return { q: q.toLowerCase(), myId: request.myId };
         });
     }
     handle(request) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.validate(request);
-            const user = yield UserRepository_1.default.getUsersByEmail(request.email, request.myId);
-            if (!user)
-                throw new Error("Email not found");
-            return user;
+            const input = yield this.validate(request);
+            const rooms = yield RoomRepository_1.default.getRoomsByUser(input.myId, 1000, 0);
+            const result = rooms.filter((e) => {
+                var _a;
+                if (((_a = e === null || e === void 0 ? void 0 : e.name) === null || _a === void 0 ? void 0 : _a.toLowerCase().indexOf(input.q)) != -1) {
+                    return true;
+                }
+                return false;
+            });
+            return result;
         });
     }
 }

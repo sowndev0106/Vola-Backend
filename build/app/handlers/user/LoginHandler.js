@@ -29,8 +29,10 @@ class LoginHandler extends Handler_1.default {
         return __awaiter(this, void 0, void 0, function* () {
             const { email, password } = yield this.validate(request);
             const auth = (0, auth_1.getAuth)(firebaseConfigClient_1.app);
-            const user = yield (0, auth_1.signInWithEmailAndPassword)(auth, email, password);
-            return user;
+            const userCreate = yield (0, auth_1.createUserWithEmailAndPassword)(auth, email, password);
+            (0, auth_1.sendEmailVerification)(userCreate.user);
+            // const user = await signInWithEmailAndPassword(auth, email, password);
+            return userCreate;
         });
     }
 }

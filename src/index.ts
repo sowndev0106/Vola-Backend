@@ -16,7 +16,7 @@ const options = {
   key: fs.readFileSync("ssl/key.pem"),
   cert: fs.readFileSync("ssl/cert.pem"),
 };
-const server = https.createServer(options, app);
+const server = http.createServer(app);
 
 app.use(cors());
 

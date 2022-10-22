@@ -18,15 +18,17 @@ class SocketMain {
     }
     startSocket() {
         this.io.on("connection", this.onConnection.bind(this));
+        // this.io.on("start", this.onConnection.bind(this));
     }
     onConnection(client) {
-        const { token } = client.handshake.query;
         logger_1.default.info(`Connection from ${client.id}`);
-        new Client_1.default(client, this, token);
+        new Client_1.default(client, this);
     }
     serverSendMessageToUsers(userIds, message, roomId) {
         userIds.forEach((e) => {
-            this.io.to(String(e)).emit("server-send-message", { message, roomId });
+            this.io
+                .to(String(e))
+                .emit("server-send-message", { message, roomId });
         });
     }
 }

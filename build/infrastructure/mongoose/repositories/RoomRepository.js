@@ -32,11 +32,13 @@ class RoomRepository extends Repository_1.default {
                 // private room then add avatar and name room
                 if (room.typeRoom == Room_1.TypeRoom.Private) {
                     // because Private room only 2 user and we find user disserent me
-                    const id = room.users[0]._id == userId ? room.users[0]._id : room.users[1]._id;
+                    const id = String(room.users[0]._id) == String(userId)
+                        ? room.users[1]._id
+                        : room.users[0]._id;
                     // add avatar and different with my user
                     const user = yield UserRepository_1.default.findOneById(id);
                     room.avatar = user === null || user === void 0 ? void 0 : user.avatar;
-                    room.name = user === null || user === void 0 ? void 0 : user.name;
+                    room.name = (user === null || user === void 0 ? void 0 : user.name) || (user === null || user === void 0 ? void 0 : user.email);
                 }
                 delete room.users;
                 return room;

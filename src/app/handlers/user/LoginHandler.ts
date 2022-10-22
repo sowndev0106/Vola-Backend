@@ -3,7 +3,12 @@ import RoomRepository from "../../../infrastructure/mongoose/repositories/RoomRe
 import UserRepository from "../../../infrastructure/mongoose/repositories/UserRepository";
 import Handler from "..//Handler";
 import firebaseAdmin from "..//..//..//infrastructure/firebase";
-import { getAuth, signInWithEmailAndPassword } from "@firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  getAuth,
+  sendEmailVerification,
+  signInWithEmailAndPassword,
+} from "@firebase/auth";
 import { app } from "..//..//..//infrastructure/firebase/firebaseConfigClient";
 
 export interface ILoginRequest {
@@ -25,8 +30,14 @@ class LoginHandler extends Handler<ILoginRequest> {
   public async handle(request: ILoginRequest): Promise<any> {
     const { email, password } = await this.validate(request);
     const auth = getAuth(app);
-    const user = await signInWithEmailAndPassword(auth, email, password);
-    return user;
+    const userCreate = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+    sendEmailVerification(userCreate.user);
+    // const user = await signInWithEmailAndPassword(auth, email, password);
+    return userCreate;
   }
 }
 export default new LoginHandler();

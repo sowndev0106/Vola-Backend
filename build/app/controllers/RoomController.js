@@ -17,6 +17,7 @@ const CreateGroupRoomHandler_1 = __importDefault(require("../handlers/rooms/Crea
 const GetMyRoomsHandler_1 = __importDefault(require("../handlers/rooms/GetMyRoomsHandler"));
 const GetMessagesHandler_1 = __importDefault(require("../handlers/rooms/GetMessagesHandler"));
 const AddUserIntoRoomHannler_1 = __importDefault(require("../handlers/rooms/AddUserIntoRoomHannler"));
+const SearchRoomHandler_1 = __importDefault(require("../handlers/rooms/SearchRoomHandler"));
 class RoomController {
     // [GET] api/rooms/users/:userId
     getPrivateRoomByUser(req, res, next) {
@@ -78,8 +79,16 @@ class RoomController {
             res.status(200).json(result);
         });
     }
-    addMeesage(req, res, next) {
-        return __awaiter(this, void 0, void 0, function* () { });
+    // [GET] api/rooms/search?q=
+    searchRoom(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const request = {
+                myId: req.headers.userId,
+                q: req.query.q,
+            };
+            const result = yield SearchRoomHandler_1.default.handle(request);
+            res.status(200).json(result);
+        });
     }
 }
 exports.default = new RoomController();

@@ -54,7 +54,8 @@ class UserController {
     getUserByEmail(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             const email = req.params.email;
-            const result = yield GetUserByEmailHandler_1.default.handle({ email });
+            const myId = req.headers.userId;
+            const result = yield GetUserByEmailHandler_1.default.handle({ email, myId });
             res.status(200).json({
                 result,
             });
