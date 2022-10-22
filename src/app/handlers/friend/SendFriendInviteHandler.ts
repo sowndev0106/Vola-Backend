@@ -62,7 +62,7 @@ class SendFriendInviteHandlerHandler extends Handler<ISendFriendInviteHandlerReq
           return String(e.userId) != String(userId);
         }) || [];
       await this.addFriend(userRecive, userSend!);
-      return { userId, message, isFriend };
+      return { user: userRecive, message, isFriend };
     }
 
     // check my user have friend invite
