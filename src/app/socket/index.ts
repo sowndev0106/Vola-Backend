@@ -4,47 +4,49 @@ import { IMessage } from "../entities/Room";
 import { IUser } from "../entities/User";
 import Client from "./Client";
 export default class SocketMain {
-  users: Map<
-    string,
-    {
-      dirver: number;
-      user: IUser;
+    users: Map<
+        string,
+        {
+            dirver: number;
+            user: IUser;
+        }
+    >; // <userId, User>
+    private io: Server;
+
+    constructor(server: any) {
+        this.io = new Server(server, {
+            cors: {
+                origin: "*",
+            },
+        });
+        this.users = new Map<
+            string,
+            {
+                dirver: number;
+                user: IUser;
+            }
+        >(); // <userId, User>
+        this.startSocket();
     }
-  >; // <userId, User>
-  private io: Server;
 
-  constructor(server: any) {
-    this.io = new Server(server, {
-      cors: {
-        origin: "*",
-      },
-    });
-    this.users = new Map<
-      string,
-      {
-        dirver: number;
-        user: IUser;
-      }
-    >(); // <userId, User>
-    this.startSocket();
-  }
+    private startSocket() {
+        this.io.on("connection", this.onConnection.bind(this));
+        // this.io.on("start", this.onConnection.bind(this));
+    }
 
-  private startSocket() {
-    // this.io.on("connection", this.onConnection.bind(this));
-    this.io.on("connect", this.onConnection.bind(this));
-  }
-
-  private onConnection(client: Socket) {
-    logger.info(`Connection from ${client.id}`);
-    new Client(client, this);
-  }
-  serverSendMessageToUsers(
-    userIds: string[],
-    message: IMessage,
-    roomId: string
-  ) {
-    userIds.forEach((e) => {
-      this.io.to(String(e)).emit("server-send-message", { message, roomId });
-    });
-  }
+    private onConnection(client: Socket) {
+        logger.info(`Connection from ${client.id}`);
+        new Client(client, this);
+    }
+    serverSendMessageToUsers(
+        userIds: string[],
+        message: IMessage,
+        roomId: string
+    ) {
+        userIds.forEach((e) => {
+            this.io
+                .to(String(e))
+                .emit("server-send-message", { message, roomId });
+        });
+    }
 }
