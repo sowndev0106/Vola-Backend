@@ -32,7 +32,7 @@ class RoomRepository extends Repository<IRoom> {
         // add avatar and different with my user
         const user = await UserRepository.findOneById(id);
         room.avatar = user?.avatar;
-        room.name = user?.name;
+        room.name = user?.name || user?.email;
       }
       delete room.users;
       return room;
@@ -93,16 +93,16 @@ class RoomRepository extends Repository<IRoom> {
     );
     return message;
   }
-  async addUserIntoRoom(userId:string, roomId: string) {
+  async addUserIntoRoom(userId: string, roomId: string) {
     var room = await this.getRoomSimpleById(roomId);
     if (!room) throw new Error(`Room ${roomId} does not exist`);
-    const userExist= room.users.find((e)=>e._id == userId);
-    if(userExist) throw new Error("User exist in room")
+    const userExist = room.users.find((e) => e._id == userId);
+    if (userExist) throw new Error("User exist in room");
     await RoomModel.updateOne(
       { _id: roomId },
-      { $push: { users: {_id:userId}} }
+      { $push: { users: { _id: userId } } }
     );
-    room.users.push({_id:userId});
+    room.users.push({ _id: userId });
     return room;
   }
   async getMessagesByRoom(

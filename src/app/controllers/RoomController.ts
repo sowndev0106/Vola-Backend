@@ -5,6 +5,7 @@ import GetMyRoomsHandler from "../handlers/rooms/GetMyRoomsHandler";
 import { IMessage } from "../entities/Room";
 import GetMessagesHandler from "../handlers/rooms/GetMessagesHandler";
 import AddUserIntoRoomHannler from "../handlers/rooms/AddUserIntoRoomHannler";
+import SearchRoomHandler from "../handlers/rooms/SearchRoomHandler";
 
 class RoomController {
   // [GET] api/rooms/users/:userId
@@ -57,6 +58,14 @@ class RoomController {
     const result = await GetMessagesHandler.handle(request);
     res.status(200).json(result);
   }
-  async addMeesage(req: Request, res: Response, next: NextFunction) {}
+  // [GET] api/rooms/search?q=
+  async searchRoom(req: Request, res: Response, next: NextFunction) {
+    const request = {
+      myId: req.headers.userId as string,
+      q: req.query.q as string,
+    };
+    const result = await SearchRoomHandler.handle(request);
+    res.status(200).json(result);
+  }
 }
 export default new RoomController();
