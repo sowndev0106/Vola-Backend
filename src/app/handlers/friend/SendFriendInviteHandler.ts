@@ -22,10 +22,10 @@ class SendFriendInviteHandlerHandler extends Handler<ISendFriendInviteHandlerReq
   protected async validate(
     request: ISendFriendInviteHandlerRequest
   ): Promise<IInputValidate> {
+    console.log(request);
     const userId = this._colectErrors.collect("userId", () =>
       IdValidate(request.userId)
     );
-    console.log(request);
     if (this._colectErrors.hasError()) {
       throw new ValidationError(this._colectErrors.errors);
     }
@@ -37,13 +37,14 @@ class SendFriendInviteHandlerHandler extends Handler<ISendFriendInviteHandlerReq
     return { myId: request.myId, userId, message };
   }
   public async handle(request: ISendFriendInviteHandlerRequest): Promise<any> {
+    let isFriend = false;
     const { myId, userId, message } = await this.validate(request);
     const userRecive = await UserRepository.findOneById(userId);
     const userSend = await UserRepository.findOneById(myId);
     if (!userRecive) throw new Error("userId not found");
 
     // check friend
-    const isExistFriend = !!userSend!.friends?.find(
+    let isExistFriend = !!userSend!.friends?.find(
       (e) => String(e.userId) == String(userId)
     );
     if (isExistFriend) throw new Error("user already friends");
@@ -54,18 +55,17 @@ class SendFriendInviteHandlerHandler extends Handler<ISendFriendInviteHandlerReq
       ) != -1;
     if (isUserSendExistInvite) {
       // add friend
-
+      let isFriend = true;
       // delete friend invite
       userSend!.friendInvites =
         userSend!.friendInvites?.filter((e) => {
           return String(e.userId) != String(userId);
         }) || [];
       await this.addFriend(userRecive, userSend!);
-      return { userId, message };
+      return { userId, message, isFriend };
     }
 
     // check my user have friend invite
-
     const isUserReciveExistInvite =
       userRecive?.friendInvites?.findIndex((e) => {
         return String(e.userId) == String(myId);
@@ -79,8 +79,7 @@ class SendFriendInviteHandlerHandler extends Handler<ISendFriendInviteHandlerReq
       message: message,
     });
     await UserRepository.update(userRecive);
-
-    return { userId, message };
+    return { userId, message, isFriend: isExistFriend };
   }
   private async addFriend(userRecive: IUser, userSend: IUser) {
     // recive

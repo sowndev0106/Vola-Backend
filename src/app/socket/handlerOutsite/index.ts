@@ -7,7 +7,7 @@ export default (server: Server) => {
   socket = server;
 };
 
-export const sendFriendInviteSocket = (friendInvite: IFriendInvite) => {
+export const sendFriendInviteSocket = (friendInvite: any) => {
   if (!socket) {
     logger.error("socket in ousite is null");
     return;

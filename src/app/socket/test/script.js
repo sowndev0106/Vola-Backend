@@ -1,5 +1,3 @@
-const { alternatives } = require("joi");
-
 const url = "http://localhost:5000/api";
 const socket = io("http://localhost:5000", {
   query: `token=${token}`,
