@@ -1,87 +1,122 @@
-<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<link
+  href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"
+  rel="stylesheet"
+  id="bootstrap-css"
+/>
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <!------ Include the above in your HEAD tag ---------->
 
-
 <html>
-<head>
-<link rel="stylesheet" href="style.css"><title>User 1</title>
+  <head>
+    <link rel="stylesheet" href="style.css" />
+    <title>User 1</title>
 
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" type="text/css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<script src="http://localhost:5000/socket.io/socket.io.js"></script>;
-<script>
-  const token= 'Bear eyJhbGciOiJSUzI1NiIsImtpZCI6IjU4NWI5MGI1OWM2YjM2ZDNjOTBkZjBlOTEwNDQ1M2U2MmY4ODdmNzciLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoiU8ahbiBOZ3V54buFbiBUaGFuaCIsInBpY3R1cmUiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS0vQUZkWnVjckR5dnc4c0dLZ0dJWWxZZUJQVEFyUUl6b0RMNWt4bmVaX25OYTZFUT1zOTYtYyIsImlzcyI6Imh0dHBzOi8vc2VjdXJldG9rZW4uZ29vZ2xlLmNvbS92b2xvLTNiZTdjIiwiYXVkIjoidm9sby0zYmU3YyIsImF1dGhfdGltZSI6MTY2NDgwODM2OSwidXNlcl9pZCI6ImR3OHgwOXFpRHNibmtoTkpqUWZUdTI1REFYaDIiLCJzdWIiOiJkdzh4MDlxaURzYm5raE5KalFmVHUyNURBWGgyIiwiaWF0IjoxNjY0ODA4MzY5LCJleHAiOjE2NjQ4MTE5NjksImVtYWlsIjoibmd1eWVudGhhbmhzb24xNjIwMDFAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnsiZ29vZ2xlLmNvbSI6WyIxMTIyNDg1MzQyOTQxNjc4MjQ3NzEiXSwiZW1haWwiOlsibmd1eWVudGhhbmhzb24xNjIwMDFAZ21haWwuY29tIl19LCJzaWduX2luX3Byb3ZpZGVyIjoiZ29vZ2xlLmNvbSJ9fQ.lqbJxRvBy2-mpw1sMJg6zA8WSOjDjTwtJaFbnNaNuYDufsPt9AoRWDXDvIA4czQqxJnXHu5IAApxsXBBGSurJEYfqVDGR6veqNqF2Il6WH3kVmmYqDJe47x5CCPbEZN3o6A_vzZaznk008Ejfw-w76qJusGwYfZ3Z26_th3V59oLeJZU6FIA2tTdhQRP98c_OTriIXIQiBhGtNQolRH5I_-z8D-MyAJIM8BpNqvfDWOOCRgdOMJ8No9b7XF_1qTvIfIJLDaYygE61ttnFLcF3QZuN5qFl1Ph2GOBxdpNZHV3_FSw8ZCNtsaBS5QwWC7GC-E25dq0IS2q0LDCK-F-8w'
-</script>
-</head>
-<body>
-<div class="container">
-<h3 class=" text-center">Messaging</h3>
-<div class="messaging">
-      <div class="inbox_msg">
-        <div class="inbox_people">
-          <div class="headind_srch">
-            <div class="recent_heading">
-              <h4>Recent</h4>
-            </div>
-            <div class="srch_bar">
-              <div class="stylish-input-group">
-                <input type="text" class="search-bar"  placeholder="Search" >
-                <span class="input-group-addon">
-                <button type="button"> <i class="fa fa-search" aria-hidden="true"></i> </button>
-                </span> </div>
-            </div>
-          </div>
-          <div class="inbox_chat" id="list-rooms">
-            <div class="chat_list active_chat">
-              <div class="chat_people">
-                <div class="chat_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
-                <div class="chat_ib">
-                  <h5>Sunil Rajput <span class="chat_date">Dec 25</span></h5>
-                  <p>Test, which is a new approach to have all solutions 
-                    astrology under one roof.</p>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"
+      type="text/css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="http://localhost:5000/socket.io/socket.io.js"></script>
+    ;
+    <script>
+      const token =
+        "Bear eyJhbGciOiJSUzI1NiIsImtpZCI6IjVkMzQwZGRiYzNjNWJhY2M0Y2VlMWZiOWQxNmU5ODM3ZWM2MTYzZWIiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoiU8ahbiBOZ3V54buFbiBUaGFuaCIsInBpY3R1cmUiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS0vQUZkWnVjckR5dnc4c0dLZ0dJWWxZZUJQVEFyUUl6b0RMNWt4bmVaX25OYTZFUT1zOTYtYyIsImlzcyI6Imh0dHBzOi8vc2VjdXJldG9rZW4uZ29vZ2xlLmNvbS92b2xvLTNiZTdjIiwiYXVkIjoidm9sby0zYmU3YyIsImF1dGhfdGltZSI6MTY2NjQzOTY4OCwidXNlcl9pZCI6ImR3OHgwOXFpRHNibmtoTkpqUWZUdTI1REFYaDIiLCJzdWIiOiJkdzh4MDlxaURzYm5raE5KalFmVHUyNURBWGgyIiwiaWF0IjoxNjY2NDM5Njg4LCJleHAiOjE2NjY0NDMyODgsImVtYWlsIjoibmd1eWVudGhhbmhzb24xNjIwMDFAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnsiZ29vZ2xlLmNvbSI6WyIxMTIyNDg1MzQyOTQxNjc4MjQ3NzEiXSwiZW1haWwiOlsibmd1eWVudGhhbmhzb24xNjIwMDFAZ21haWwuY29tIl19LCJzaWduX2luX3Byb3ZpZGVyIjoiZ29vZ2xlLmNvbSJ9fQ.wT9cOD7gRYU2EQqBIba4skOfpYrLzzv54UR6DgYwfErnnlXgL0TQOpyvJrdEUvp0gJrkc7YVegM-pdGlS5zZP1anSPk7yrtS9qGBFW7W2wbuJktz_qFh_vuABlcv_QHHUuRkoAp8oHz4_pG6s-drOHTAba0gyZvN65muO2g6nWexlssSo256Hq5WwfKl1DF_GPT0aHpQye0wVu2NOvEvFtGtx9cyLIIDzWmm-K36tgfYQd7RprbzI0RgIvjSjYsQVhijmK-Pcbtv8DXKX2TVwCQijDovfCOB329zox311OiCXSY6W1H-AxmhCSYGP_e8fS1CdlCSD8cSCrwscymH9w";
+    </script>
+  </head>
+  <body>
+    <div class="container">
+      <h3 class="text-center">Messaging</h3>
+      <div class="messaging">
+        <div class="inbox_msg">
+          <div class="inbox_people">
+            <div class="headind_srch">
+              <div class="recent_heading">
+                <h4>Recent</h4>
+              </div>
+              <div class="srch_bar">
+                <div class="stylish-input-group">
+                  <input type="text" class="search-bar" placeholder="Search" />
+                  <span class="input-group-addon">
+                    <button type="button">
+                      <i class="fa fa-search" aria-hidden="true"></i>
+                    </button>
+                  </span>
                 </div>
               </div>
             </div>
-            
-          </div>
-        </div>
-        <div class="mesgs">
-          <div class="msg_history" id="messages">
-            <!-- recive -->
-            <div class="incoming_msg">
-              <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
-              <div class="received_msg">
-                <div class="received_withd_msg">
-                  <p>Test which is a new approach to have all
-                    solutions</p>
-                  <span class="time_date"> 11:01 AM    |    June 9</span></div>
+            <div class="inbox_chat" id="list-rooms">
+              <div class="chat_list active_chat">
+                <div class="chat_people">
+                  <div class="chat_img">
+                    <img
+                      src="https://ptetutorials.com/images/user-profile.png"
+                      alt="sunil"
+                    />
+                  </div>
+                  <div class="chat_ib">
+                    <h5>Sunil Rajput <span class="chat_date">Dec 25</span></h5>
+                    <p>
+                      Test, which is a new approach to have all solutions
+                      astrology under one roof.
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
-            <!-- // send -->
-            <div class="outgoing_msg">
-              <div class="sent_msg">
-                <p>Test which is a new approach to have all
-                  solutions</p>
-                <span class="time_date"> 11:01 AM    |    June 9</span> </div>
-            </div>
-           
           </div>
-          <div class="type_msg">
-            <div class="input_msg_write">
-              <input type="text" class="write_msg" id="message" placeholder="Type a message" />
-              <button class="msg_send_btn" onclick="send()" type="button"><i class="fa fa-paper-plane-o" aria-hidden="true"></i></button>
+          <div class="mesgs">
+            <div class="msg_history" id="messages">
+              <!-- recive -->
+              <div class="incoming_msg">
+                <div class="incoming_msg_img">
+                  <img
+                    src="https://ptetutorials.com/images/user-profile.png"
+                    alt="sunil"
+                  />
+                </div>
+                <div class="received_msg">
+                  <div class="received_withd_msg">
+                    <p>Test which is a new approach to have all solutions</p>
+                    <span class="time_date"> 11:01 AM | June 9</span>
+                  </div>
+                </div>
+              </div>
+              <!-- // send -->
+              <div class="outgoing_msg">
+                <div class="sent_msg">
+                  <p>Test which is a new approach to have all solutions</p>
+                  <span class="time_date"> 11:01 AM | June 9</span>
+                </div>
+              </div>
+            </div>
+            <div class="type_msg">
+              <div class="input_msg_write">
+                <input
+                  type="text"
+                  class="write_msg"
+                  id="message"
+                  placeholder="Type a message"
+                />
+                <button class="msg_send_btn" onclick="send()" type="button">
+                  <i class="fa fa-paper-plane-o" aria-hidden="true"></i>
+                </button>
+              </div>
             </div>
           </div>
         </div>
+        <p class="text-center top_spac">
+          Design by
+          <a
+            target="_blank"
+            href="https://www.linkedin.com/in/sunil-rajput-nattho-singh/"
+            >Sunil Rajput</a
+          >
+        </p>
       </div>
-      <p class="text-center top_spac"> Design by <a target="_blank" href="https://www.linkedin.com/in/sunil-rajput-nattho-singh/">Sunil Rajput</a></p>
-      
     </div>
-  </div>
-  <script src="socket.js"></script>
-  <script src="script.js"></script>
-
-    </body>
-    </html>
+    <script src="socket.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

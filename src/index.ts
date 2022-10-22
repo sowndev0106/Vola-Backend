@@ -9,7 +9,7 @@ import "./infrastructure/mongoose";
 import http from "http";
 import Socket from "./app/socket";
 import fs from "fs";
-import https from "https";
+import socketOutSiteHandler from "./app/socket/handlerOutsite";
 const port = Number(process.env.PORT || 5000);
 const app = express();
 const options = {
@@ -21,7 +21,8 @@ const server = http.createServer(app);
 app.use(cors());
 
 // config socket
-new Socket(server);
+const socket = new Socket(server);
+socketOutSiteHandler(socket.getSocket());
 
 app.use(morgan("dev"));
 

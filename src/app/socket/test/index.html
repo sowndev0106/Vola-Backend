@@ -17,7 +17,9 @@
   <script>
     const token =
       "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IjVkMzQwZGRiYzNjNWJhY2M0Y2VlMWZiOWQxNmU5ODM3ZWM2MTYzZWIiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vdm9sby0zYmU3YyIsImF1ZCI6InZvbG8tM2JlN2MiLCJhdXRoX3RpbWUiOjE2NjYzNjE4MzMsInVzZXJfaWQiOiJib3F1S2dGZDl3VG5qN2VZbjNyTG1oRWlCY0cyIiwic3ViIjoiYm9xdUtnRmQ5d1RuajdlWW4zckxtaEVpQmNHMiIsImlhdCI6MTY2NjM2MTgzMywiZXhwIjoxNjY2MzY1NDMzLCJlbWFpbCI6ImtodW9uZ0BnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnsiZW1haWwiOlsia2h1b25nQGdtYWlsLmNvbSJdfSwic2lnbl9pbl9wcm92aWRlciI6InBhc3N3b3JkIn19.1bBeOdzGdPYLZJNxWCcZJKzCOdkdWNI2UG6U3YjWcovx3JeCeurMkx12vw4_GMvV5IOrtDjjNGVJfgqwdxb8o4tzjG2aZZAV-n5Mtco9qhDOgyS6r-x2w2owbOk4kB1APnaZ-sbpdsIxjusjssKc4U5sxna9PdkzCAaD3kcCSUrtl00TQSIqrlaUzoTj1vyU_fMMIV3t1zd0dxty6MwqawpCm1mBWIFoWk2lljdR7d_KyMroGDiGXCl-EiJyjFJMG8famnFXGQ2l-PXPg-39fw_5_OocXWU7Fv-2FxnNw9zZzJ3Wknbce8s4gLoNYlLc_sLYH6P3AemRVrnv2u1vog";
-    const socket = io("http://localhost:5000", { query: `token=${token}` });
+    const socket = io("http://localhost:5000", {
+      query: `token=${token}`,
+    });
     const sendMessage = (roomId, content, type) => {
       socket.emit("client-send-message", { token, roomId, content, type });
     };

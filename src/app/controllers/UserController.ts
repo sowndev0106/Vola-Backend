@@ -7,6 +7,7 @@ import GetMyProfileHandler, {
 import GetUserByEmailHandler from "../handlers/user/GetUserByEmailHandler";
 import GetUserByIdHandler from "../handlers/user/GetUserByIdHandler";
 import LoginHandler from "../handlers/user/LoginHandler";
+import { sendFriendInviteSocket } from "../socket/handlerOutsite";
 
 class UserController {
   // [GET] api/users/profile
@@ -57,6 +58,7 @@ class UserController {
       message: req.body.message,
     };
     const result = await SendFriendInviteHandler.handle(request);
+    sendFriendInviteSocket(result);
     res.status(200).json(result);
   }
   // [GET] api/users/friends

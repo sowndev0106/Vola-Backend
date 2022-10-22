@@ -1,5 +1,9 @@
+const { alternatives } = require("joi");
+
 const url = "http://localhost:5000/api";
-const socket = io("http://localhost:5000", { query: `token=${token}` });
+const socket = io("http://localhost:5000", {
+  query: `token=${token}`,
+});
 var user;
 var roomId;
 const config = {
@@ -91,4 +95,8 @@ socket.on("server-send-message", (data) => {
     a += elementReciveMeesage(data.message.user.avatar, data.message.content);
   }
   messages.innerHTML = a;
+});
+socket.on("send-friend-invite", (data) => {
+  alert(data);
+  console.log({ data });
 });
