@@ -4,15 +4,15 @@ import { IFriendInvite } from "../../entities/Friend";
 
 let socket: Server;
 export default (server: Server) => {
-  socket = server;
+    socket = server;
 };
 
-export const sendFriendInviteSocket = (friendInvite: any) => {
-  if (!socket) {
-    logger.error("socket in ousite is null");
-    return;
-  }
-  socket
-    .to(String(friendInvite.userId))
-    .emit("send-friend-invite", { friendInvite });
+export const sendFriendInviteSocket = (friendInvite: any, userId: string) => {
+    if (!socket) {
+        logger.error("socket in ousite is null");
+        return;
+    }
+    console.log("add friend request " + userId);
+
+    socket.to(String(userId)).emit("send-friend-invite", { friendInvite });
 };

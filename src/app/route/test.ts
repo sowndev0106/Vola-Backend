@@ -5,8 +5,8 @@ import { request } from "http";
 import { sendFriendInviteSocket } from "../socket/handlerOutsite";
 const router = Router();
 router.get("/socket/invite", (req, res) => {
-  const { userId, data } = req.query;
-  sendFriendInviteSocket({ userId, data });
-  return res.send("ok");
+    const { userId, data } = req.query;
+    sendFriendInviteSocket({ data }, userId as string);
+    return res.send("ok");
 });
 export default router;
