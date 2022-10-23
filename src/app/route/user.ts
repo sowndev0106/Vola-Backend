@@ -3,7 +3,7 @@ import UserController from "../controllers/UserController";
 const router = Router();
 router.get("/profile", UserController.getMyProfile);
 router.post("/invites", UserController.sendFriendInvite);
-router.delete("/invites", UserController.sendFriendInvite);
+router.delete("/invites", UserController.deleteFriendInvite);
 router.get("/friends", UserController.getListFriends);
 router.get("/email/:email", UserController.getUserByEmail);
 router.get("/:id", UserController.getUserById);
