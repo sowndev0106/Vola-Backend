@@ -35,9 +35,20 @@ class LoginHandler extends Handler<ILoginRequest> {
     //   email,
     //   password
     // );
-    // sendEmailVerification(userCreate.user);
-    const user = await signInWithEmailAndPassword(auth, email, password);
-    return user;
+    // var actionCodeSettings = {
+    //   url: "https://localhost:5000",
+    //   handleCodeInApp: true,
+    // };
+    const userCreate = await signInWithEmailAndPassword(auth, email, password);
+    // sendEmailVerification(userCreate.user, actionCodeSettings)
+    //   .then((e) => {
+    //     console.log("Send email OK");
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //     console.log("--------------------------- err send email");
+    //   });
+    return userCreate;
   }
 }
 export default new LoginHandler();

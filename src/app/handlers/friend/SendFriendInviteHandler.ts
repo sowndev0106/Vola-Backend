@@ -22,7 +22,6 @@ class SendFriendInviteHandlerHandler extends Handler<ISendFriendInviteHandlerReq
   protected async validate(
     request: ISendFriendInviteHandlerRequest
   ): Promise<IInputValidate> {
-    console.log(request);
     const userId = this._colectErrors.collect("userId", () =>
       IdValidate(request.userId)
     );

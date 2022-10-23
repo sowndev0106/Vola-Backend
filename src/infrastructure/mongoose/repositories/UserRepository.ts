@@ -22,7 +22,6 @@ class UserRepository extends Repository<IUser> {
       doc.isFriend = isFriend;
       return doc;
     });
-    // console.log(result);
     return result as any;
   }
   async GetOnePopulate(id: string): Promise<IUser[] | null> {
