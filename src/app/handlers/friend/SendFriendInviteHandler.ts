@@ -79,7 +79,7 @@ class SendFriendInviteHandlerHandler extends Handler<ISendFriendInviteHandlerReq
       message: message,
     });
     await UserRepository.update(userRecive);
-    return { user: userRecive, message, isFriend: isExistFriend };
+    return { user: userSend, message, isFriend: isExistFriend };
   }
 
   private async addFriend(userRecive: IUser, userSend: IUser) {
