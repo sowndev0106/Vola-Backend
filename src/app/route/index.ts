@@ -5,10 +5,12 @@ import userRoute from "./user";
 import roomRoute from "./room";
 import storageRoute from "./storage";
 import authRoute from "./auth";
+import testRoute from "./test";
 
 const router = Router();
 
 router.use("/auth", authRoute);
+router.use("/test", testRoute);
 router.use(authenticate);
 
 router.use("/storages", storageRoute);

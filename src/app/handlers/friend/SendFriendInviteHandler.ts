@@ -36,6 +36,7 @@ class SendFriendInviteHandlerHandler extends Handler<ISendFriendInviteHandlerReq
     const message = "";
     return { myId: request.myId, userId, message };
   }
+
   public async handle(request: ISendFriendInviteHandlerRequest): Promise<any> {
     let isFriend = false;
     const { myId, userId, message } = await this.validate(request);
@@ -81,6 +82,7 @@ class SendFriendInviteHandlerHandler extends Handler<ISendFriendInviteHandlerReq
     await UserRepository.update(userRecive);
     return { user: userRecive, message, isFriend: isExistFriend };
   }
+
   private async addFriend(userRecive: IUser, userSend: IUser) {
     // recive
     if (!userRecive.friends) userRecive.friends = [];

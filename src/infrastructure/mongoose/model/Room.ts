@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { StringDecoder } from "string_decoder";
 import { TypeMeesage, TypeRoom } from "..//..//..//app/entities/Room";
 export default mongoose.model(
   "rooms",
@@ -9,7 +10,7 @@ export default mongoose.model(
           _id: { type: mongoose.Types.ObjectId, require: true, ref: "users" },
           lastMessageRead: { type: mongoose.Types.ObjectId },
           deletedAt: Date,
-          missing:{type: Number , default: 0}
+          missing: { type: Number, default: 0 },
         },
       ],
       messages: [
@@ -22,6 +23,17 @@ export default mongoose.model(
             enum: TypeMeesage,
             default: TypeMeesage.Text,
           },
+          reacts: [
+            {
+              emoji: String,
+              user: {
+                type: mongoose.Types.ObjectId,
+                require: true,
+                ref: "users",
+              },
+              createAt: { type: Date },
+            },
+          ],
         },
       ],
       typeRoom: {

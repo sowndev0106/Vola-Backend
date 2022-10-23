@@ -12,13 +12,18 @@ export interface IUserRoom {
   _id: string;
   lastMessageRead?: string;
   deletedAt?: Date | null;
-  missing?:number 
+  missing?: number;
 }
 export interface IMessage {
   _id?: string;
   user: string;
   content: string;
   type: TypeMeesage;
+  reacts: {
+    emoji: string;
+    user: string;
+    createAt: string;
+  }[];
   createdAt: Date;
 }
 export enum TypeMeesage {

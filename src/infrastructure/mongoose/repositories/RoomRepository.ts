@@ -10,6 +10,7 @@ import RoomModel from "../model/Room";
 import UserModel from "../model/User";
 import UserRepository from "./UserRepository";
 import mongoose, { mongo } from "mongoose";
+import { deleteFileS3ByLink } from "../../s3/handler";
 class RoomRepository extends Repository<IRoom> {
   constructor() {
     super(RoomModel as any);
@@ -155,6 +156,40 @@ class RoomRepository extends Repository<IRoom> {
     const messages = await RoomModel.aggregate(aggregates).exec();
     if (!messages) return [];
     return messages.reverse() as IMessage[];
+  }
+  async removeUserFromRoom(userId: string, roomId: string) {
+    var room = await this.getRoomSimpleById(roomId);
+    if (!room) throw new Error(`Room ${roomId} does not exist`);
+    const userExist = room.users.find((e) => e._id == userId);
+    if (!userExist) throw new Error("User not exist in room");
+    await RoomModel.updateOne(
+      { _id: roomId },
+      { $pull: { users: { _id: userId } } }
+    );
+    room.users = room.users.filter((e) => e._id != userId);
+    return room;
+  }
+  async updateNameRoom(userId: string, name: string, roomId: string) {
+    var room = await this.getRoomSimpleById(roomId);
+    if (!room) throw new Error(`Room ${roomId} does not exist`);
+    const userExist = room.users.find((e) => e._id == userId);
+    if (!userExist) throw new Error("User not permisson");
+    await RoomModel.updateOne({ _id: roomId }, { name });
+    room.name = name;
+    return room;
+  }
+  async updateAvatarRoom(userId: string, avatar: string, roomId: string) {
+    var room = await this.getRoomSimpleById(roomId);
+    if (!room) throw new Error(`Room ${roomId} does not exist`);
+    const userExist = room.users.find((e) => e._id == userId);
+    if (!userExist) throw new Error("User not permisson");
+    await RoomModel.updateOne({ _id: roomId }, { avatar });
+
+    // delete avatar old
+    deleteFileS3ByLink(room.avatar);
+    room.avatar = avatar;
+
+    return room;
   }
 }
 export default new RoomRepository();

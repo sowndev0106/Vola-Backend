@@ -1,12 +1,13 @@
 import RoomRepository from "../../../infrastructure/mongoose/repositories/RoomRepository";
 import UserRepository from "../../../infrastructure/mongoose/repositories/UserRepository";
+import { deleteFileS3ByLink } from "../../../infrastructure/s3/handler";
 import { IRoom, TypeRoom } from "../../entities/Room";
 import ValidationError from "../../errors/ValidationError";
 import Handler from "../Handler";
 
 export interface ICreateGroupRoomHandler {
   myId: string;
-  avatar: string;
+  avatar?: string;
   name: string;
   userIds: string[];
 }
@@ -20,19 +21,21 @@ class CreateGroupRoomHandler extends Handler<ICreateGroupRoomHandler> {
     request: ICreateGroupRoomHandler
   ): Promise<IInputValidated> {
     if (!request.userIds) {
+      deleteFileS3ByLink(request.avatar);
       throw new ValidationError({ userIds: "userIds is require" });
     }
     if (!request.name) {
+      deleteFileS3ByLink(request.avatar);
       throw new ValidationError({ name: "name is require" });
     }
-    const ids = Array.from(new Set(request.userIds)) // remove element duplicated
+    const ids = Array.from(new Set(request.userIds)); // remove element duplicated
     const idsValidated: Array<{ _id: string }> = [];
     for (let index = 0; index < ids.length; index++) {
       if (ids[index] == request.myId) continue;
       const id = await this.checKValidateUserId(ids[index]);
       id && idsValidated.push({ _id: id });
     }
-    
+
     idsValidated.push({ _id: request.myId });
     return {
       userIds: idsValidated,
