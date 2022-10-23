@@ -56,14 +56,14 @@ class SendFriendInviteHandlerHandler extends Handler<ISendFriendInviteHandlerReq
       ) != -1;
     if (isUserSendExistInvite) {
       // add friend
-      let isFriend = true;
+      isFriend = true;
       // delete friend invite
       userSend!.friendInvites =
         userSend!.friendInvites?.filter((e) => {
           return String(e.userId) != String(userId);
         }) || [];
       await this.addFriend(userRecive, userSend!);
-      return { user: userRecive, message, isFriend };
+      return { user: userSend, message, isFriend };
     }
 
     // check my user have friend invite
