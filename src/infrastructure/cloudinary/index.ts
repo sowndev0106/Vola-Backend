@@ -11,15 +11,18 @@ cloudinary.v2.config({
 
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary.v2,
+
   params: async (req: any, file: any) => {
     // async code using `req` and `file`
     // ...
     logger.info(`Insert successfully file ${file.filename} cloundynary`);
-    const extension = file.mimetype.split("/")[1];
+    console.log(file.originalname.split("."));
+    const extension = file.originalname.split(".").pop();
     const fileName = `${uuidv4()}`;
     return {
       folder: "volo",
       format: extension,
+      resource_type: "auto",
       public_id: fileName,
     };
   },
