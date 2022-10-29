@@ -16,7 +16,7 @@ class StorageController {
     if (!file) {
       throw new Error("file is require");
     }
-    const url = file["location"] as string;
+    const url = file["path"] as string;
     const extentionFile = url.split(".").at(-1) as string;
     const type = listExtentionImage.includes(extentionFile)
       ? TypeMeesage.Image
