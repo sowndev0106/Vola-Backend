@@ -7,6 +7,7 @@ export interface IClientSendMessage {
   token: string;
   roomId: string;
   content: string;
+  type: string;
 }
 export default async (data: IClientSendMessage, socketServer: SocketServer) => {
   if (!data.content || !data.content.trim()) return;
@@ -15,7 +16,7 @@ export default async (data: IClientSendMessage, socketServer: SocketServer) => {
   const message: any = {
     user: user._id as string,
     content: data.content,
-    type: TypeMeesage.Text,
+    type: data.type,
     createdAt: new Date(),
   };
 
