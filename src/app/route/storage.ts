@@ -1,6 +1,10 @@
 import { Router } from "express";
 import StorageController from "../controllers/StorageController";
-import s3 from "..//..//infrastructure/s3";
+import cloudinaryUpload from "..//..//infrastructure/cloudinary";
 const router = Router();
-router.post("/upload", s3.single("file"), StorageController.uploadSingleFile);
+router.post(
+  "/upload",
+  cloudinaryUpload.single("file"),
+  StorageController.uploadSingleFile
+);
 export default router;
