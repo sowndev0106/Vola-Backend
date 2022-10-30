@@ -11,7 +11,7 @@ exports.default = mongoose_1.default.model("rooms", new mongoose_1.default.Schem
             _id: { type: mongoose_1.default.Types.ObjectId, require: true, ref: "users" },
             lastMessageRead: { type: mongoose_1.default.Types.ObjectId },
             deletedAt: Date,
-            missing: { type: Number, default: 0 }
+            missing: { type: Number, default: 0 },
         },
     ],
     messages: [
@@ -24,6 +24,17 @@ exports.default = mongoose_1.default.model("rooms", new mongoose_1.default.Schem
                 enum: Room_1.TypeMeesage,
                 default: Room_1.TypeMeesage.Text,
             },
+            reacts: [
+                {
+                    emoji: String,
+                    user: {
+                        type: mongoose_1.default.Types.ObjectId,
+                        require: true,
+                        ref: "users",
+                    },
+                    createAt: { type: Date },
+                },
+            ],
         },
     ],
     typeRoom: {

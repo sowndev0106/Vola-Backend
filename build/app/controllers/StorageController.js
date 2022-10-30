@@ -27,7 +27,7 @@ class StorageController {
             if (!file) {
                 throw new Error("file is require");
             }
-            const url = file["location"];
+            const url = file["path"];
             const extentionFile = url.split(".").at(-1);
             const type = listExtentionImage.includes(extentionFile)
                 ? Room_1.TypeMeesage.Image

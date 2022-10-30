@@ -26,10 +26,11 @@ class SocketMain {
     }
     serverSendMessageToUsers(userIds, message, roomId) {
         userIds.forEach((e) => {
-            this.io
-                .to(String(e))
-                .emit("server-send-message", { message, roomId });
+            this.io.to(String(e)).emit("server-send-message", { message, roomId });
         });
+    }
+    getSocket() {
+        return this.io;
     }
 }
 exports.default = SocketMain;

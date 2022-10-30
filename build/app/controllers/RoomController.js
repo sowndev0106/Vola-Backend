@@ -18,6 +18,10 @@ const GetMyRoomsHandler_1 = __importDefault(require("../handlers/rooms/GetMyRoom
 const GetMessagesHandler_1 = __importDefault(require("../handlers/rooms/GetMessagesHandler"));
 const AddUserIntoRoomHannler_1 = __importDefault(require("../handlers/rooms/AddUserIntoRoomHannler"));
 const SearchRoomHandler_1 = __importDefault(require("../handlers/rooms/SearchRoomHandler"));
+const mutler_1 = require("../../util/mutler");
+const RemoveUserFromRoomHannler_1 = __importDefault(require("../handlers/rooms/RemoveUserFromRoomHannler"));
+const UpdateNameGroupRoomHandler_1 = __importDefault(require("../handlers/rooms/UpdateNameGroupRoomHandler"));
+const UpdateAvatarGroupRoomHandler_1 = __importDefault(require("../handlers/rooms/UpdateAvatarGroupRoomHandler"));
 class RoomController {
     // [GET] api/rooms/users/:userId
     getPrivateRoomByUser(req, res, next) {
@@ -33,17 +37,18 @@ class RoomController {
     // [POST] api/rooms
     createGroupRoomByUser(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
+            const avatar = (0, mutler_1.getUrlFromRequest)(req);
             const request = {
                 myId: req.headers.userId,
                 userIds: req.body.userIds,
                 name: req.body.name,
-                avatar: req.body.avatar,
+                avatar: avatar,
             };
             const result = yield CreateGroupRoomHandler_1.default.handle(request);
             res.status(200).json(result);
         });
     }
-    // [PUT] api/rooms
+    // [PUT] /:roomId/users/:userId
     addUserIntoRoom(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             const request = {
@@ -51,6 +56,42 @@ class RoomController {
                 roomId: req.params.roomId,
             };
             const result = yield AddUserIntoRoomHannler_1.default.handle(request);
+            res.status(200).json(result);
+        });
+    }
+    // [PATCH] /:roomId/users
+    updateNameRoom(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const request = {
+                myId: req.headers.userId,
+                name: req.body.name,
+                roomId: req.params.roomId,
+            };
+            const result = yield UpdateNameGroupRoomHandler_1.default.handle(request);
+            res.status(200).json(result);
+        });
+    }
+    // [PATCH] /:roomId/avatar
+    updateAvatarRoom(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const avatar = (0, mutler_1.getUrlFromRequest)(req);
+            const request = {
+                myId: req.headers.userId,
+                roomId: req.params.roomId,
+                avatar: avatar,
+            };
+            const result = yield UpdateAvatarGroupRoomHandler_1.default.handle(request);
+            res.status(200).json(result);
+        });
+    }
+    // [DELETE] /:roomId/users/:userId
+    removeUserFromRoom(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const request = {
+                userId: req.params.userId,
+                roomId: req.params.roomId,
+            };
+            const result = yield RemoveUserFromRoomHannler_1.default.handle(request);
             res.status(200).json(result);
         });
     }
