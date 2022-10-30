@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const StorageController_1 = __importDefault(require("../controllers/StorageController"));
-const s3_1 = __importDefault(require("..//..//infrastructure/s3"));
+const cloudinary_1 = __importDefault(require("..//..//infrastructure/cloudinary"));
 const router = (0, express_1.Router)();
-router.get("/upload", s3_1.default.single("file"), StorageController_1.default.uploadSingleFile);
+router.post("/upload", cloudinary_1.default.single("file"), StorageController_1.default.uploadSingleFile);
 exports.default = router;

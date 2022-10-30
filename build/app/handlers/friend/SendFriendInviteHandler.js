@@ -20,7 +20,6 @@ class SendFriendInviteHandlerHandler extends Handler_1.default {
     validate(request) {
         return __awaiter(this, void 0, void 0, function* () {
             const userId = this._colectErrors.collect("userId", () => (0, IdValidate_1.default)(request.userId));
-            console.log(request);
             if (this._colectErrors.hasError()) {
                 throw new ValidationError_1.default(this._colectErrors.errors);
             }
@@ -35,26 +34,28 @@ class SendFriendInviteHandlerHandler extends Handler_1.default {
     handle(request) {
         var _a, _b, _c, _d;
         return __awaiter(this, void 0, void 0, function* () {
+            let isFriend = false;
             const { myId, userId, message } = yield this.validate(request);
             const userRecive = yield UserRepository_1.default.findOneById(userId);
             const userSend = yield UserRepository_1.default.findOneById(myId);
             if (!userRecive)
                 throw new Error("userId not found");
             // check friend
-            const isExistFriend = !!((_a = userSend.friends) === null || _a === void 0 ? void 0 : _a.find((e) => String(e.userId) == String(userId)));
+            let isExistFriend = !!((_a = userSend.friends) === null || _a === void 0 ? void 0 : _a.find((e) => String(e.userId) == String(userId)));
             if (isExistFriend)
                 throw new Error("user already friends");
             // check invite recived
             const isUserSendExistInvite = ((_b = userSend.friendInvites) === null || _b === void 0 ? void 0 : _b.findIndex((e) => String(e.userId) == String(userId))) != -1;
             if (isUserSendExistInvite) {
                 // add friend
+                isFriend = true;
                 // delete friend invite
                 userSend.friendInvites =
                     ((_c = userSend.friendInvites) === null || _c === void 0 ? void 0 : _c.filter((e) => {
                         return String(e.userId) != String(userId);
                     })) || [];
                 yield this.addFriend(userRecive, userSend);
-                return { userId, message };
+                return { user: userSend, message, isFriend };
             }
             // check my user have friend invite
             const isUserReciveExistInvite = ((_d = userRecive === null || userRecive === void 0 ? void 0 : userRecive.friendInvites) === null || _d === void 0 ? void 0 : _d.findIndex((e) => {
@@ -69,7 +70,7 @@ class SendFriendInviteHandlerHandler extends Handler_1.default {
                 message: message,
             });
             yield UserRepository_1.default.update(userRecive);
-            return { userId, message };
+            return { user: userSend, message, isFriend: isExistFriend };
         });
     }
     addFriend(userRecive, userSend) {

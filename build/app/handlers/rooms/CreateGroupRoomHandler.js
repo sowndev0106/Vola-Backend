@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const RoomRepository_1 = __importDefault(require("../../../infrastructure/mongoose/repositories/RoomRepository"));
 const UserRepository_1 = __importDefault(require("../../../infrastructure/mongoose/repositories/UserRepository"));
+const handler_1 = require("../../../infrastructure/s3/handler");
 const Room_1 = require("../../entities/Room");
 const ValidationError_1 = __importDefault(require("../../errors/ValidationError"));
 const Handler_1 = __importDefault(require("../Handler"));
@@ -21,9 +22,11 @@ class CreateGroupRoomHandler extends Handler_1.default {
     validate(request) {
         return __awaiter(this, void 0, void 0, function* () {
             if (!request.userIds) {
+                (0, handler_1.deleteFileS3ByLink)(request.avatar);
                 throw new ValidationError_1.default({ userIds: "userIds is require" });
             }
             if (!request.name) {
+                (0, handler_1.deleteFileS3ByLink)(request.avatar);
                 throw new ValidationError_1.default({ name: "name is require" });
             }
             const ids = Array.from(new Set(request.userIds)); // remove element duplicated

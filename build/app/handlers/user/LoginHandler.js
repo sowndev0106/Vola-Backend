@@ -29,9 +29,24 @@ class LoginHandler extends Handler_1.default {
         return __awaiter(this, void 0, void 0, function* () {
             const { email, password } = yield this.validate(request);
             const auth = (0, auth_1.getAuth)(firebaseConfigClient_1.app);
-            const userCreate = yield (0, auth_1.createUserWithEmailAndPassword)(auth, email, password);
-            (0, auth_1.sendEmailVerification)(userCreate.user);
-            // const user = await signInWithEmailAndPassword(auth, email, password);
+            // const userCreate = await createUserWithEmailAndPassword(
+            //   auth,
+            //   email,
+            //   password
+            // );
+            // var actionCodeSettings = {
+            //   url: "https://localhost:5000",
+            //   handleCodeInApp: true,
+            // };
+            const userCreate = yield (0, auth_1.signInWithEmailAndPassword)(auth, email, password);
+            // sendEmailVerification(userCreate.user, actionCodeSettings)
+            //   .then((e) => {
+            //     console.log("Send email OK");
+            //   })
+            //   .catch((err) => {
+            //     console.log(err);
+            //     console.log("--------------------------- err send email");
+            //   });
             return userCreate;
         });
     }

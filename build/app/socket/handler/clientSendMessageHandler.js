@@ -13,7 +13,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const RoomRepository_1 = __importDefault(require("../../../infrastructure/mongoose/repositories/RoomRepository"));
-const Room_1 = require("../../entities/Room");
 const getUserByToken_1 = __importDefault(require("../util/getUserByToken"));
 exports.default = (data, socketServer) => __awaiter(void 0, void 0, void 0, function* () {
     if (!data.content || !data.content.trim())
@@ -22,7 +21,7 @@ exports.default = (data, socketServer) => __awaiter(void 0, void 0, void 0, func
     const message = {
         user: user._id,
         content: data.content,
-        type: Room_1.TypeMeesage.Text,
+        type: data.type,
         createdAt: new Date(),
     };
     const room = yield RoomRepository_1.default.getRoomSimpleById(data.roomId);

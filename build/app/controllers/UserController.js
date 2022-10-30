@@ -23,13 +23,23 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const DeleteFriendInviteHandler_1 = __importDefault(require("../handlers/friend/DeleteFriendInviteHandler"));
 const GetFriendsHandler_1 = __importDefault(require("../handlers/friend/GetFriendsHandler"));
 const SendFriendInviteHandler_1 = __importDefault(require("../handlers/friend/SendFriendInviteHandler"));
 const GetMyProfileHandler_1 = __importDefault(require("../handlers/user/GetMyProfileHandler"));
 const GetUserByEmailHandler_1 = __importDefault(require("../handlers/user/GetUserByEmailHandler"));
 const GetUserByIdHandler_1 = __importDefault(require("../handlers/user/GetUserByIdHandler"));
 const LoginHandler_1 = __importDefault(require("../handlers/user/LoginHandler"));
+const handlerOutsite_1 = require("../socket/handlerOutsite");
 class UserController {
+    // [POST] api/auth/login
+    login(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { email, password } = req.body;
+            const result = yield LoginHandler_1.default.handle({ email, password });
+            res.status(200).json(result);
+        });
+    }
     // [GET] api/users/profile
     getMyProfile(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -70,14 +80,6 @@ class UserController {
             res.status(200).json(Object.assign({}, props));
         });
     }
-    // [POST] api/auth/login
-    login(req, res, next) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const { email, password } = req.body;
-            const result = yield LoginHandler_1.default.handle({ email, password });
-            res.status(200).json(result);
-        });
-    }
     // [POST] api/users/invites
     sendFriendInvite(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -87,6 +89,7 @@ class UserController {
                 message: req.body.message,
             };
             const result = yield SendFriendInviteHandler_1.default.handle(request);
+            (0, handlerOutsite_1.sendFriendInviteSocket)(result, request.userId);
             res.status(200).json(result);
         });
     }
@@ -97,6 +100,17 @@ class UserController {
                 myId: req.headers.userId,
             };
             const result = yield GetFriendsHandler_1.default.handle(request);
+            res.status(200).json(result);
+        });
+    }
+    // [DELETE] api/users/invites
+    deleteFriendInvite(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const request = {
+                myId: req.headers.userId,
+                userId: req.body.userId,
+            };
+            const result = yield DeleteFriendInviteHandler_1.default.handle(request);
             res.status(200).json(result);
         });
     }

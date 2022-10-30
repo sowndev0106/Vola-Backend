@@ -17,6 +17,7 @@ const Repository_1 = __importDefault(require("./Repository"));
 const Room_2 = __importDefault(require("../model/Room"));
 const UserRepository_1 = __importDefault(require("./UserRepository"));
 const mongoose_1 = __importDefault(require("mongoose"));
+const handler_1 = require("../../s3/handler");
 class RoomRepository extends Repository_1.default {
     constructor() {
         super(Room_2.default);
@@ -161,6 +162,47 @@ class RoomRepository extends Repository_1.default {
             if (!messages)
                 return [];
             return messages.reverse();
+        });
+    }
+    removeUserFromRoom(userId, roomId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            var room = yield this.getRoomSimpleById(roomId);
+            if (!room)
+                throw new Error(`Room ${roomId} does not exist`);
+            const userExist = room.users.find((e) => e._id == userId);
+            if (!userExist)
+                throw new Error("User not exist in room");
+            yield Room_2.default.updateOne({ _id: roomId }, { $pull: { users: { _id: userId } } });
+            room.users = room.users.filter((e) => e._id != userId);
+            return room;
+        });
+    }
+    updateNameRoom(userId, name, roomId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            var room = yield this.getRoomSimpleById(roomId);
+            if (!room)
+                throw new Error(`Room ${roomId} does not exist`);
+            const userExist = room.users.find((e) => e._id == userId);
+            if (!userExist)
+                throw new Error("User not permisson");
+            yield Room_2.default.updateOne({ _id: roomId }, { name });
+            room.name = name;
+            return room;
+        });
+    }
+    updateAvatarRoom(userId, avatar, roomId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            var room = yield this.getRoomSimpleById(roomId);
+            if (!room)
+                throw new Error(`Room ${roomId} does not exist`);
+            const userExist = room.users.find((e) => e._id == userId);
+            if (!userExist)
+                throw new Error("User not permisson");
+            yield Room_2.default.updateOne({ _id: roomId }, { avatar });
+            // delete avatar old
+            (0, handler_1.deleteFileS3ByLink)(room.avatar);
+            room.avatar = avatar;
+            return room;
         });
     }
 }

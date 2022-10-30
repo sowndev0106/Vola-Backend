@@ -28,7 +28,6 @@ class Client {
         this.socket.on("start", this.start.bind(this));
     }
     start(data) {
-        console.log({ data });
         // add user to list users
         addUserHandler_1.default
             .bind(this)({ token: data === null || data === void 0 ? void 0 : data.token, client: this })

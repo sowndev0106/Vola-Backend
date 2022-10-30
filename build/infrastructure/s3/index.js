@@ -9,6 +9,7 @@ const client_s3_1 = require("@aws-sdk/client-s3");
 const logger_1 = __importDefault(require("..//logger"));
 const uuid_1 = require("uuid");
 const maxSize = 1024 * 1024 * 10; // 10MB
+const bucketName = process.env.AWS_BUCKETS_S3_NAME;
 // connect AWS
 const s3 = new client_s3_1.S3Client({
     credentials: {
@@ -21,7 +22,7 @@ var upload = (0, multer_1.default)({
     storage: (0, multer_s3_1.default)({
         s3: s3,
         acl: "public-read",
-        bucket: process.env.AWS_BUCKETS_S3_NAME,
+        bucket: bucketName,
         key: function (req, file, cb) {
             logger_1.default.info(`Insert successfully  file ${file.filename}`);
             const fileName = `${(0, uuid_1.v4)()}.${file.mimetype.split("/")[1]}`;

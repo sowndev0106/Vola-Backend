@@ -14,6 +14,7 @@ require("./infrastructure/mongoose");
 const http_1 = __importDefault(require("http"));
 const socket_1 = __importDefault(require("./app/socket"));
 const fs_1 = __importDefault(require("fs"));
+const handlerOutsite_1 = __importDefault(require("./app/socket/handlerOutsite"));
 const port = Number(process.env.PORT || 5000);
 const app = (0, express_1.default)();
 const options = {
@@ -23,7 +24,8 @@ const options = {
 const server = http_1.default.createServer(app);
 app.use((0, cors_1.default)());
 // config socket
-new socket_1.default(server);
+const socket = new socket_1.default(server);
+(0, handlerOutsite_1.default)(socket.getSocket());
 app.use((0, morgan_1.default)("dev"));
 app.use(express_1.default.json()); // for parsing application/json
 app.use(express_1.default.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded

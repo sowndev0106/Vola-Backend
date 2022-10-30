@@ -19,6 +19,7 @@ const storage = new CloudinaryStorage({
     console.log(file.originalname.split("."));
     const extension = file.originalname.split(".").pop();
     const fileName = `${uuidv4()}`;
+
     return {
       folder: "volo",
       format: extension,

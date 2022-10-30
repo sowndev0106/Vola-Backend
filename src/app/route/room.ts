@@ -8,6 +8,8 @@ router.post("/", s3.single("avatar"), RoomController.createGroupRoomByUser);
 router.get("/search", RoomController.searchRoom);
 router.get("/:roomId/messages", RoomController.getMesageByGroup);
 router.put("/:roomId/users/:userId", RoomController.addUserIntoRoom);
+router.patch("/:roomId/name", RoomController.updateNameRoom);
+router.patch("/:roomId/avatar", RoomController.updateAvatarRoom);
 router.delete("/:roomId/users/:userId", RoomController.removeUserFromRoom);
 router.put(
   "/:roomId",

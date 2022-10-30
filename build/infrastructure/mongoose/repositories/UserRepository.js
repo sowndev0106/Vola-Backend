@@ -38,7 +38,6 @@ class UserRepository extends Repository_1.default {
                 doc.isFriend = isFriend;
                 return doc;
             });
-            // console.log(result);
             return result;
         });
     }
