@@ -16,9 +16,8 @@ const storage = new CloudinaryStorage({
     // async code using `req` and `file`
     // ...
     logger.info(`Insert successfully file ${file.filename} cloundynary`);
-    console.log(file.originalname.split("."));
     const extension = file.originalname.split(".").pop();
-    const fileName = `${uuidv4()}`;
+    const fileName = `${uuidv4()}___${file.originalname.split(".")[0]}`;
 
     return {
       folder: "volo",

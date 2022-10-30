@@ -173,7 +173,7 @@ class RoomRepository extends Repository<IRoom> {
     var room = await this.getRoomSimpleById(roomId);
     if (!room) throw new Error(`Room ${roomId} does not exist`);
     const userExist = room.users.find((e) => e._id == userId);
-    if (!userExist) throw new Error("User not permisson");
+    if (userExist) throw new Error("User not permisson");
     await RoomModel.updateOne({ _id: roomId }, { name });
     room.name = name;
     return room;
@@ -182,7 +182,7 @@ class RoomRepository extends Repository<IRoom> {
     var room = await this.getRoomSimpleById(roomId);
     if (!room) throw new Error(`Room ${roomId} does not exist`);
     const userExist = room.users.find((e) => e._id == userId);
-    if (!userExist) throw new Error("User not permisson");
+    if (userExist) throw new Error("User not permisson");
     await RoomModel.updateOne({ _id: roomId }, { avatar });
 
     // delete avatar old
