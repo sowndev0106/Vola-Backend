@@ -5,34 +5,49 @@ import ValidationError from "../../errors/ValidationError";
 import Handler from "../Handler";
 
 export interface IAddUserIntoRoomHandler {
-  userId: string;
+  userIds: string[];
   roomId: string;
 }
 interface IInputValidated {
-  userId: string;
+  userIds: Array<{ _id: string }>;
   roomId: string;
 }
 class AddUserIntoRoomHandler extends Handler<IAddUserIntoRoomHandler> {
   protected async validate(
     request: IAddUserIntoRoomHandler
   ): Promise<IInputValidated> {
-    const userId =  this._colectErrors.collect("userId", () => StringValidate(request.userId));
-    const roomId =  this._colectErrors.collect("roomId", () => StringValidate(request.roomId));
-    if(this._colectErrors.hasError()){
-      throw  new ValidationError(this._colectErrors.errors)
+    const roomId = this._colectErrors.collect("roomId", () =>
+      StringValidate(request.roomId)
+    );
+    if (this._colectErrors.hasError()) {
+      throw new ValidationError(this._colectErrors.errors);
     }
-    return {userId,
-      roomId}
-}
-
+    const ids = Array.from(new Set(request.userIds)); // remove element duplicated
+    const userIds: Array<{ _id: string }> = [];
+    for (let index = 0; index < ids.length; index++) {
+      const id = await this.checKValidateUserId(ids[index]);
+      console.log(!!id);
+      id && userIds.push({ _id: id });
+    }
+    return { userIds, roomId };
+  }
 
   public async handle(request: IAddUserIntoRoomHandler): Promise<any> {
     const input = await this.validate(request);
-    const user = await UserRepository.findOneById(input.userId)
-    if(!user) throw new Error("user not found");
-    const room = await RoomRepository.addUserIntoRoom(input.userId,input.roomId )
-    return room;
-    
+    const room = await RoomRepository.getRoomSimpleById(input.roomId);
+    for (const userInput of input.userIds || []) {
+      if (
+        !!room?.users.find((user) => String(user._id) == String(userInput._id))
+      )
+        // exist
+        continue;
+      try {
+        await RoomRepository.addUserIntoRoom(userInput._id, input.roomId);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    return await RoomRepository.getRoomSimpleById(input.roomId);
   }
   private async checKValidateUserId(userId: string): Promise<string | null> {
     const regexIdMongo = /^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/i;

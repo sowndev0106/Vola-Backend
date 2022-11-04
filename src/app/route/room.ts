@@ -17,7 +17,7 @@ router.get("/search", RoomController.searchRoom);
 
 router.get("/:roomId/messages", RoomController.getMesageByGroup);
 
-router.put("/:roomId/users/:userId", RoomController.addUserIntoRoom);
+router.put("/:roomId/users", RoomController.addUserIntoRoom);
 
 router.patch("/:roomId/name", RoomController.updateNameRoom);
 
@@ -34,5 +34,8 @@ router.put(
   cloudinary.single("avatar"),
   RoomController.createGroupRoomByUser
 );
+
+router.get("/:roomId", RoomController.getRoomById);
+router.delete("/:roomId", RoomController.deleteRoom);
 
 export default router;
