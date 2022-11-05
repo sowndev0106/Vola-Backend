@@ -36,6 +36,10 @@ router.put(
 );
 
 router.get("/:roomId", RoomController.getRoomById);
+router.get(
+  "/:roomId/user-vailable-add-room",
+  RoomController.getListUserAvailableAddRoom
+);
 router.delete("/:roomId", RoomController.deleteRoom);
 
 export default router;
