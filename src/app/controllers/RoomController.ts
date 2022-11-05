@@ -10,8 +10,28 @@ import { getUrlFromRequest } from "../../util/mutler";
 import RemoveUserFromRoomHannler from "../handlers/rooms/RemoveUserFromRoomHannler";
 import UpdateNameGroupRoomHandler from "../handlers/rooms/UpdateNameGroupRoomHandler";
 import UpdateAvatarGroupRoomHandler from "../handlers/rooms/UpdateAvatarGroupRoomHandler";
+import GetRoomByIdHandler from "../handlers/rooms/GetRoomByIdHandler";
+import DeleteRoomHandler from "../handlers/rooms/DeleteRoomHandler";
 
 class RoomController {
+  // [DELETE] api/rooms/:roomId
+  async deleteRoom(req: Request, res: Response, next: NextFunction) {
+    const request = {
+      myId: req.headers.userId as string,
+      roomId: req.params.roomId,
+    };
+    const result = await DeleteRoomHandler.handle(request);
+    res.status(200).json(result);
+  }
+  // [GET] api/rooms/:roomId
+  async getRoomById(req: Request, res: Response, next: NextFunction) {
+    const request = {
+      myId: req.headers.userId as string,
+      roomId: req.params.roomId,
+    };
+    const result = await GetRoomByIdHandler.handle(request);
+    res.status(200).json(result);
+  }
   // [GET] api/rooms/users/:userId
   async getPrivateRoomByUser(req: Request, res: Response, next: NextFunction) {
     const request = {
@@ -36,7 +56,7 @@ class RoomController {
   // [PUT] /:roomId/users/:userId
   async addUserIntoRoom(req: Request, res: Response, next: NextFunction) {
     const request = {
-      userId: req.params.userId,
+      userIds: req.body.userIds,
       roomId: req.params.roomId,
     };
     const result = await AddUserIntoRoomHannler.handle(request);
