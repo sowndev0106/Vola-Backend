@@ -12,6 +12,7 @@ import UpdateNameGroupRoomHandler from "../handlers/rooms/UpdateNameGroupRoomHan
 import UpdateAvatarGroupRoomHandler from "../handlers/rooms/UpdateAvatarGroupRoomHandler";
 import GetRoomByIdHandler from "../handlers/rooms/GetRoomByIdHandler";
 import DeleteRoomHandler from "../handlers/rooms/DeleteRoomHandler";
+import GetListUserAvailableAddRoom from "../handlers/rooms/GetListUserAvailableAddRoom";
 
 class RoomController {
   // [DELETE] api/rooms/:roomId
@@ -23,6 +24,7 @@ class RoomController {
     const result = await DeleteRoomHandler.handle(request);
     res.status(200).json(result);
   }
+
   // [GET] api/rooms/:roomId
   async getRoomById(req: Request, res: Response, next: NextFunction) {
     const request = {
@@ -30,6 +32,20 @@ class RoomController {
       roomId: req.params.roomId,
     };
     const result = await GetRoomByIdHandler.handle(request);
+    res.status(200).json(result);
+  }
+
+  // [GET] api/rooms/:roomId
+  async getListUserAvailableAddRoom(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    const request = {
+      myId: req.headers.userId as string,
+      roomId: req.params.roomId,
+    };
+    const result = await GetListUserAvailableAddRoom.handle(request);
     res.status(200).json(result);
   }
   // [GET] api/rooms/users/:userId

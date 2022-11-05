@@ -24,7 +24,7 @@ class UserRepository extends Repository<IUser> {
     });
     return result as any;
   }
-  async GetOnePopulate(id: string): Promise<IUser[] | null> {
+  async GetOnePopulate(id: string): Promise<IUser | null> {
     const user = await UserModel.findOne({ _id: id })
       .populate({
         path: "friends.userId",
