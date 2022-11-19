@@ -7,7 +7,6 @@ import {
 } from "../../../app/entities/Room";
 import Repository from "./Repository";
 import RoomModel from "../model/Room";
-import UserModel from "../model/User";
 import UserRepository from "./UserRepository";
 import mongoose, { mongo } from "mongoose";
 import { deleteFileS3ByLink } from "../../s3/handler";
@@ -47,8 +46,8 @@ class RoomRepository extends Repository<IRoom> {
       { _id: id },
       { messages: 0 }
     ).exec();
-    room.messages = [];
     if (!room) return null;
+    room.messages = [];
     return room as unknown as IRoom;
   }
   async getRoomSimplePopulate(id: string): Promise<IRoom | null> {
@@ -175,8 +174,11 @@ class RoomRepository extends Repository<IRoom> {
     if (!messages) return [];
     return messages.reverse() as IMessage[];
   }
-  async removeUserFromRoom(userId: string, roomId: string) {
+  async removeUserFromRoom(userId: string, roomId: string, myId: string) {
     var room = await this.getRoomSimpleById(roomId);
+    if (String(room?.owner) != String(myId)) {
+      throw new Error("you don't have permission to access");
+    }
     if (!room) throw new Error(`Room ${roomId} does not exist`);
     const userExist = room.users.find((e) => e._id == userId);
     if (!userExist) throw new Error("User not exist in room");
@@ -204,9 +206,21 @@ class RoomRepository extends Repository<IRoom> {
     await RoomModel.updateOne({ _id: roomId }, { avatar });
 
     // delete avatar old
-    deleteFileS3ByLink(room.avatar);
+    // deleteFileS3ByLink(room.avatar);
     room.avatar = avatar;
 
+    return room;
+  }
+  async changeOwnerRoom(newOwner: string, roomId: string, myId: string) {
+    var room = await this.getRoomSimpleById(roomId);
+    if (String(room?.owner) != String(myId)) {
+      throw new Error("you don't have permission to access");
+    }
+    if (!room) throw new Error(`Room ${roomId} does not exist`);
+    const userExist = room.users.find((e) => e._id == newOwner);
+    if (!userExist) throw new Error("User not exist in room");
+    await RoomModel.updateOne({ _id: roomId }, { owner: newOwner });
+    room.owner = newOwner;
     return room;
   }
 }

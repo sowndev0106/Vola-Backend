@@ -5,6 +5,7 @@ export interface IRoom {
   avatar?: string;
   messages: IMessage[];
   typeRoom: TypeRoom;
+  owner?: string;
   createdAt?: Date;
   updatedAt?: Date;
 }

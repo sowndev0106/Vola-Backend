@@ -13,6 +13,7 @@ import UpdateAvatarGroupRoomHandler from "../handlers/rooms/UpdateAvatarGroupRoo
 import GetRoomByIdHandler from "../handlers/rooms/GetRoomByIdHandler";
 import DeleteRoomHandler from "../handlers/rooms/DeleteRoomHandler";
 import GetListUserAvailableAddRoom from "../handlers/rooms/GetListUserAvailableAddRoom";
+import ChangeOwnerRoomHannler from "../handlers/rooms/ChangeOwnerRoomHannler";
 
 class RoomController {
   // [DELETE] api/rooms/:roomId
@@ -102,6 +103,7 @@ class RoomController {
   // [DELETE] /:roomId/users/:userId
   async removeUserFromRoom(req: Request, res: Response, next: NextFunction) {
     const request = {
+      myId: req.headers.userId as string,
       userId: req.params.userId,
       roomId: req.params.roomId,
     };
@@ -137,6 +139,16 @@ class RoomController {
       q: req.query.q as string,
     };
     const result = await SearchRoomHandler.handle(request);
+    res.status(200).json(result);
+  }
+  // [PATCH] api/rooms/:id/owner
+  async changeOwner(req: Request, res: Response, next: NextFunction) {
+    const request = {
+      myId: req.headers.userId as string,
+      newOwner: req.body.userId,
+      roomId: req.params.roomId,
+    };
+    const result = await ChangeOwnerRoomHannler.handle(request);
     res.status(200).json(result);
   }
 }

@@ -42,4 +42,6 @@ router.get(
 );
 router.delete("/:roomId", RoomController.deleteRoom);
 
+router.patch("/:roomId/owner", RoomController.changeOwner);
+
 export default router;
