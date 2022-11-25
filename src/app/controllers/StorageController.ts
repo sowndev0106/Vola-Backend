@@ -28,5 +28,13 @@ class StorageController {
       name: file.key,
     });
   }
+  async uploadMultipleFiles(req: Request, res: Response, next: NextFunction) {
+    const files = req.files as any;
+    console.log(files);
+    if (!files) {
+      throw new Error("file is require");
+    }
+    res.json(files);
+  }
 }
 export default new StorageController();

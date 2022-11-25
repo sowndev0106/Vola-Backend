@@ -19,6 +19,7 @@ class RoomRepository extends Repository<IRoom> {
       { "users._id": userId },
       { __v: 0, messages: { $slice: -1 } }
     )
+      .populate({ path: "messages.reacts.user", select: "_id email avatar " })
       .limit(limit)
       .skip(offset)
       .sort({ updatedAt: -1 })
@@ -163,6 +164,7 @@ class RoomRepository extends Repository<IRoom> {
         content: "$messages.content",
         type: "$messages.type",
         user: "$messages.user",
+        reacts: "$messages.reacts",
         createdAt: "$messages.createdAt",
       },
     });
@@ -223,5 +225,63 @@ class RoomRepository extends Repository<IRoom> {
     room.owner = newOwner;
     return room;
   }
+  async deleteMessage(messageId: string, roomId: string, myId: string) {
+    const result = await RoomModel.updateOne(
+      { _id: roomId, "messages._id": messageId },
+      {
+        $set: {
+          "messages.$.type": TypeMeesage.Unsend,
+        },
+      }
+    );
+    return await this.getRoomSimpleById(roomId);
+  }
+  async reactMessage(
+    messageId: string,
+    roomId: string,
+    myId: string,
+    react: string
+  ) {
+    const room: any = await RoomModel.findById(roomId);
+    const reacts: any = [];
+    let isAlreadyReact = false;
+    room?.reacts?.forEach((e: any) => {
+      if (String(e?.user) == String(myId)) {
+        // already react
+        e.emoji = react;
+        isAlreadyReact = true;
+      }
+      reacts.push(e);
+    });
+    if (!isAlreadyReact) {
+      reacts.push({ emoji: react, user: myId, createAt: new Date() });
+    }
+
+    // add new React
+    await RoomModel.updateOne(
+      { _id: roomId, "messages._id": messageId },
+      {
+        $set: {
+          "messages.$.reacts": reacts,
+        },
+      }
+    );
+
+    return await this.getRoomSimpleById(roomId);
+  }
+
+  async GetReactMessage(messageId: string, roomId: string, myId: string) {
+    // add new React
+    const result: any = await RoomModel.findOne(
+      {
+        _id: roomId,
+        "messages._id": messageId,
+      },
+      { "messages.$": 1 }
+    ).populate({ path: "messages.reacts.user", select: "_id email avatar " });
+    const reacts = result?.messages[0]?.reacts;
+    return reacts ? reacts : [];
+  }
 }
+
 export default new RoomRepository();

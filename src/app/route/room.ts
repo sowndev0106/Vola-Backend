@@ -44,4 +44,13 @@ router.delete("/:roomId", RoomController.deleteRoom);
 
 router.patch("/:roomId/owner", RoomController.changeOwner);
 
+router.delete("/:roomId/messages/:messageId", RoomController.deleteMessage);
+
+router.post("/:roomId/messages/:messageId/react", RoomController.reactMessage);
+
+router.get(
+  "/:roomId/messages/:messageId/react",
+  RoomController.getReactMessage
+);
+
 export default router;
