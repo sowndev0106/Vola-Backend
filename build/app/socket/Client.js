@@ -24,10 +24,12 @@ class Client {
     }
     addlistenEvent() {
         this.socket.on("client-send-message", this.onClientSendMessage.bind(this));
+        this.socket.on("client-send-react-mesage", this.onClientSendReactMessage.bind(this));
         this.socket.on("disconnect", this.onDiscornect.bind(this));
         this.socket.on("start", this.start.bind(this));
     }
     start(data) {
+        console.log(data);
         // add user to list users
         addUserHandler_1.default
             .bind(this)({ token: data === null || data === void 0 ? void 0 : data.token, client: this })
@@ -38,6 +40,10 @@ class Client {
         logger_1.default.warn(`Diconnect from ${this.socket.id}`);
     }
     onClientSendMessage(data) {
+        logger_1.default.info(`Client ${this.socket.id} send message`);
+        (0, clientSendMessageHandler_1.default)(data, this.socketMain).catch((err) => this.error(err));
+    }
+    onClientSendReactMessage(data) {
         logger_1.default.info(`Client ${this.socket.id} send message`);
         (0, clientSendMessageHandler_1.default)(data, this.socketMain).catch((err) => this.error(err));
     }

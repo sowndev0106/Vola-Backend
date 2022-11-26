@@ -13,30 +13,26 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const RoomRepository_1 = __importDefault(require("../../../infrastructure/mongoose/repositories/RoomRepository"));
-const UserRepository_1 = __importDefault(require("../../../infrastructure/mongoose/repositories/UserRepository"));
-const StringValidate_1 = __importDefault(require("../../../util/validate/StringValidate"));
+const IdValidate_1 = __importDefault(require("../../../util/validate/IdValidate"));
 const ValidationError_1 = __importDefault(require("../../errors/ValidationError"));
 const Handler_1 = __importDefault(require("../Handler"));
-class AddUserIntoRoomHandler extends Handler_1.default {
+class GetReactMessageHandler extends Handler_1.default {
     validate(request) {
         return __awaiter(this, void 0, void 0, function* () {
-            const userId = this._colectErrors.collect("userId", () => (0, StringValidate_1.default)(request.userId));
-            const roomId = this._colectErrors.collect("roomId", () => (0, StringValidate_1.default)(request.roomId));
+            const messageId = this._colectErrors.collect("messageId", () => (0, IdValidate_1.default)(request.messageId));
+            const roomId = this._colectErrors.collect("roomId", () => (0, IdValidate_1.default)(request.roomId));
             if (this._colectErrors.hasError()) {
                 throw new ValidationError_1.default(this._colectErrors.errors);
             }
-            return { userId, roomId, myId: request.myId };
+            return { messageId, roomId, myId: request.myId };
         });
     }
     handle(request) {
         return __awaiter(this, void 0, void 0, function* () {
             const input = yield this.validate(request);
-            const user = yield UserRepository_1.default.findOneById(input.userId);
-            if (!user)
-                throw new Error("user not found");
-            const room = yield RoomRepository_1.default.removeUserFromRoom(input.userId, input.roomId, input.myId);
-            return room;
+            const result = yield RoomRepository_1.default.GetReactMessage(input.messageId, input.roomId, input.myId);
+            return result;
         });
     }
 }
-exports.default = new AddUserIntoRoomHandler();
+exports.default = new GetReactMessageHandler();

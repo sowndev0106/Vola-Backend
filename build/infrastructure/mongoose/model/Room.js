@@ -44,6 +44,7 @@ exports.default = mongoose_1.default.model("rooms", new mongoose_1.default.Schem
     },
     name: String,
     avatar: String,
+    owner: { type: mongoose_1.default.Types.ObjectId, require: true, ref: "users" },
 }, {
     timestamps: true,
     strict: false,

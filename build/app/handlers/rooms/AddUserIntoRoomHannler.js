@@ -20,23 +20,36 @@ const Handler_1 = __importDefault(require("../Handler"));
 class AddUserIntoRoomHandler extends Handler_1.default {
     validate(request) {
         return __awaiter(this, void 0, void 0, function* () {
-            const userId = this._colectErrors.collect("userId", () => (0, StringValidate_1.default)(request.userId));
             const roomId = this._colectErrors.collect("roomId", () => (0, StringValidate_1.default)(request.roomId));
             if (this._colectErrors.hasError()) {
                 throw new ValidationError_1.default(this._colectErrors.errors);
             }
-            return { userId,
-                roomId };
+            const ids = Array.from(new Set(request.userIds)); // remove element duplicated
+            const userIds = [];
+            for (let index = 0; index < ids.length; index++) {
+                const id = yield this.checKValidateUserId(ids[index]);
+                console.log(!!id);
+                id && userIds.push({ _id: id });
+            }
+            return { userIds, roomId };
         });
     }
     handle(request) {
         return __awaiter(this, void 0, void 0, function* () {
             const input = yield this.validate(request);
-            const user = yield UserRepository_1.default.findOneById(input.userId);
-            if (!user)
-                throw new Error("user not found");
-            const room = yield RoomRepository_1.default.addUserIntoRoom(input.userId, input.roomId);
-            return room;
+            const room = yield RoomRepository_1.default.getRoomSimpleById(input.roomId);
+            for (const userInput of input.userIds || []) {
+                if (!!(room === null || room === void 0 ? void 0 : room.users.find((user) => String(user._id) == String(userInput._id))))
+                    // exist
+                    continue;
+                try {
+                    yield RoomRepository_1.default.addUserIntoRoom(userInput._id, input.roomId);
+                }
+                catch (error) {
+                    console.log(error);
+                }
+            }
+            return yield RoomRepository_1.default.getRoomSimpleById(input.roomId);
         });
     }
     checKValidateUserId(userId) {

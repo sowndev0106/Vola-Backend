@@ -26,11 +26,10 @@ const storage = new multer_storage_cloudinary_1.CloudinaryStorage({
     cloudinary: cloudinary_1.default.v2,
     params: (req, file) => __awaiter(void 0, void 0, void 0, function* () {
         // async code using `req` and `file`
-        // ...
-        logger_1.default.info(`Insert successfully file ${file.filename} cloundynary`);
-        console.log(file.originalname.split("."));
+        console.log(file);
         const extension = file.originalname.split(".").pop();
-        const fileName = `${(0, uuid_1.v4)()}`;
+        const fileName = `${(0, uuid_1.v4)()}___${file.originalname.split(".")[0]}`;
+        logger_1.default.info(`Insert successfully file ${fileName} cloundynary`);
         return {
             folder: "volo",
             format: extension,

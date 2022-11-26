@@ -17,7 +17,6 @@ const Repository_1 = __importDefault(require("./Repository"));
 const Room_2 = __importDefault(require("../model/Room"));
 const UserRepository_1 = __importDefault(require("./UserRepository"));
 const mongoose_1 = __importDefault(require("mongoose"));
-const handler_1 = require("../../s3/handler");
 class RoomRepository extends Repository_1.default {
     constructor() {
         super(Room_2.default);
@@ -25,6 +24,7 @@ class RoomRepository extends Repository_1.default {
     getRoomsByUser(userId, limit, offset) {
         return __awaiter(this, void 0, void 0, function* () {
             const rooms = yield Room_2.default.find({ "users._id": userId }, { __v: 0, messages: { $slice: -1 } })
+                .populate({ path: "messages.reacts.user", select: "_id email avatar " })
                 .limit(limit)
                 .skip(offset)
                 .sort({ updatedAt: -1 })
@@ -52,6 +52,26 @@ class RoomRepository extends Repository_1.default {
             const room = yield Room_2.default.findOne({ _id: id }, { messages: 0 }).exec();
             if (!room)
                 return null;
+            room.messages = [];
+            return room;
+        });
+    }
+    getRoomSimplePopulate(id) {
+        var _a;
+        return __awaiter(this, void 0, void 0, function* () {
+            const room = yield Room_2.default.findOne({ _id: id }, { messages: 0 })
+                .populate("users._id")
+                .exec();
+            if (room)
+                room.messages = [];
+            if (!room)
+                return null;
+            room.users = (_a = room.users) === null || _a === void 0 ? void 0 : _a.map((e) => {
+                return {
+                    missing: e.missing,
+                    user: e._id,
+                };
+            });
             return room;
         });
     }
@@ -152,6 +172,7 @@ class RoomRepository extends Repository_1.default {
                     content: "$messages.content",
                     type: "$messages.type",
                     user: "$messages.user",
+                    reacts: "$messages.reacts",
                     createdAt: "$messages.createdAt",
                 },
             });
@@ -164,9 +185,12 @@ class RoomRepository extends Repository_1.default {
             return messages.reverse();
         });
     }
-    removeUserFromRoom(userId, roomId) {
+    removeUserFromRoom(userId, roomId, myId) {
         return __awaiter(this, void 0, void 0, function* () {
             var room = yield this.getRoomSimpleById(roomId);
+            if (String(room === null || room === void 0 ? void 0 : room.owner) != String(myId)) {
+                throw new Error("you don't have permission to access");
+            }
             if (!room)
                 throw new Error(`Room ${roomId} does not exist`);
             const userExist = room.users.find((e) => e._id == userId);
@@ -183,7 +207,7 @@ class RoomRepository extends Repository_1.default {
             if (!room)
                 throw new Error(`Room ${roomId} does not exist`);
             const userExist = room.users.find((e) => e._id == userId);
-            if (!userExist)
+            if (userExist)
                 throw new Error("User not permisson");
             yield Room_2.default.updateOne({ _id: roomId }, { name });
             room.name = name;
@@ -196,13 +220,77 @@ class RoomRepository extends Repository_1.default {
             if (!room)
                 throw new Error(`Room ${roomId} does not exist`);
             const userExist = room.users.find((e) => e._id == userId);
-            if (!userExist)
+            if (userExist)
                 throw new Error("User not permisson");
             yield Room_2.default.updateOne({ _id: roomId }, { avatar });
             // delete avatar old
-            (0, handler_1.deleteFileS3ByLink)(room.avatar);
+            // deleteFileS3ByLink(room.avatar);
             room.avatar = avatar;
             return room;
+        });
+    }
+    changeOwnerRoom(newOwner, roomId, myId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            var room = yield this.getRoomSimpleById(roomId);
+            if (String(room === null || room === void 0 ? void 0 : room.owner) != String(myId)) {
+                throw new Error("you don't have permission to access");
+            }
+            if (!room)
+                throw new Error(`Room ${roomId} does not exist`);
+            const userExist = room.users.find((e) => e._id == newOwner);
+            if (!userExist)
+                throw new Error("User not exist in room");
+            yield Room_2.default.updateOne({ _id: roomId }, { owner: newOwner });
+            room.owner = newOwner;
+            return room;
+        });
+    }
+    deleteMessage(messageId, roomId, myId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const result = yield Room_2.default.updateOne({ _id: roomId, "messages._id": messageId }, {
+                $set: {
+                    "messages.$.type": Room_1.TypeMeesage.Unsend,
+                },
+            });
+            return yield this.getRoomSimpleById(roomId);
+        });
+    }
+    reactMessage(messageId, roomId, myId, react) {
+        var _a;
+        return __awaiter(this, void 0, void 0, function* () {
+            const room = yield Room_2.default.findById(roomId);
+            const reacts = [];
+            let isAlreadyReact = false;
+            (_a = room === null || room === void 0 ? void 0 : room.reacts) === null || _a === void 0 ? void 0 : _a.forEach((e) => {
+                if (String(e === null || e === void 0 ? void 0 : e.user) == String(myId)) {
+                    // already react
+                    e.emoji = react;
+                    isAlreadyReact = true;
+                }
+                reacts.push(e);
+            });
+            if (!isAlreadyReact) {
+                reacts.push({ emoji: react, user: myId, createAt: new Date() });
+            }
+            // add new React
+            yield Room_2.default.updateOne({ _id: roomId, "messages._id": messageId }, {
+                $set: {
+                    "messages.$.reacts": reacts,
+                },
+            });
+            return yield this.getRoomSimpleById(roomId);
+        });
+    }
+    GetReactMessage(messageId, roomId, myId) {
+        var _a;
+        return __awaiter(this, void 0, void 0, function* () {
+            // add new React
+            const result = yield Room_2.default.findOne({
+                _id: roomId,
+                "messages._id": messageId,
+            }, { "messages.$": 1 }).populate({ path: "messages.reacts.user", select: "_id email avatar " });
+            const reacts = (_a = result === null || result === void 0 ? void 0 : result.messages[0]) === null || _a === void 0 ? void 0 : _a.reacts;
+            return reacts ? reacts : [];
         });
     }
 }

@@ -42,6 +42,7 @@ class CreateGroupRoomHandler extends Handler_1.default {
                 userIds: idsValidated,
                 name: request.name,
                 avatar: request.avatar,
+                myId: request.myId,
             };
         });
     }
@@ -54,6 +55,7 @@ class CreateGroupRoomHandler extends Handler_1.default {
                 users: input.userIds,
                 avatar: request.avatar,
                 name: request.name,
+                owner: input.myId,
             };
             const result = yield RoomRepository_1.default.add(room);
             return result;

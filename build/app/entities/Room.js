@@ -6,6 +6,8 @@ var TypeMeesage;
     TypeMeesage["File"] = "file";
     TypeMeesage["Text"] = "text";
     TypeMeesage["Image"] = "image";
+    TypeMeesage["Images"] = "images";
+    TypeMeesage["Unsend"] = "unsend";
 })(TypeMeesage = exports.TypeMeesage || (exports.TypeMeesage = {}));
 var TypeRoom;
 (function (TypeRoom) {

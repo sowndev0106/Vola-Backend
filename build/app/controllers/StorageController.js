@@ -40,5 +40,15 @@ class StorageController {
             });
         });
     }
+    uploadMultipleFiles(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const files = req.files;
+            console.log(files);
+            if (!files) {
+                throw new Error("file is require");
+            }
+            res.json(files);
+        });
+    }
 }
 exports.default = new StorageController();

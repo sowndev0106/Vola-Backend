@@ -15,22 +15,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const RoomRepository_1 = __importDefault(require("../../../infrastructure/mongoose/repositories/RoomRepository"));
 const getUserByToken_1 = __importDefault(require("../util/getUserByToken"));
 exports.default = (data, socketServer) => __awaiter(void 0, void 0, void 0, function* () {
-    if (!data.content || !data.content.trim())
-        return;
     const user = yield (0, getUserByToken_1.default)(data.token);
-    let message = {
-        user: user._id,
-        content: data.content,
-        type: data.type,
-        createdAt: new Date(),
+    const reactMessage = {
+        myId: user._id,
+        roomId: data.roomId,
+        messageId: data.messageId,
+        react: data.react,
     };
-    const room = yield RoomRepository_1.default.getRoomSimpleById(data.roomId);
+    console.log({ reactMessage });
+    const room = yield RoomRepository_1.default.reactMessage(data.messageId, data.roomId, user._id, data.react);
     if (!room)
         throw new Error("roomId not found");
-    // insert database
-    message = yield RoomRepository_1.default.addMessage(message, data.roomId);
     // send message socket
-    message.user = user;
     const users = room.users.map((user) => user._id);
-    socketServer.serverSendMessageToUsers(users, message, data.roomId);
+    socketServer.serverSendReactMessageToUsers(users, data.messageId, data.roomId, data.react, user);
 });

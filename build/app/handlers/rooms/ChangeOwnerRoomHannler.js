@@ -20,21 +20,21 @@ const Handler_1 = __importDefault(require("../Handler"));
 class AddUserIntoRoomHandler extends Handler_1.default {
     validate(request) {
         return __awaiter(this, void 0, void 0, function* () {
-            const userId = this._colectErrors.collect("userId", () => (0, StringValidate_1.default)(request.userId));
+            const newOwner = this._colectErrors.collect("userId", () => (0, StringValidate_1.default)(request.newOwner));
             const roomId = this._colectErrors.collect("roomId", () => (0, StringValidate_1.default)(request.roomId));
             if (this._colectErrors.hasError()) {
                 throw new ValidationError_1.default(this._colectErrors.errors);
             }
-            return { userId, roomId, myId: request.myId };
+            return { newOwner, roomId, myId: request.myId };
         });
     }
     handle(request) {
         return __awaiter(this, void 0, void 0, function* () {
             const input = yield this.validate(request);
-            const user = yield UserRepository_1.default.findOneById(input.userId);
+            const user = yield UserRepository_1.default.findOneById(input.newOwner);
             if (!user)
                 throw new Error("user not found");
-            const room = yield RoomRepository_1.default.removeUserFromRoom(input.userId, input.roomId, input.myId);
+            const room = yield RoomRepository_1.default.changeOwnerRoom(input.newOwner, input.roomId, input.myId);
             return room;
         });
     }

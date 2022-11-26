@@ -42,7 +42,6 @@ exports.default = (req, res, next) => __awaiter(void 0, void 0, void 0, function
         return next();
     }
     catch (error) {
-        console.log(error);
         throw new HeaderTokenInvalidError_1.default("authorization token invalid");
     }
 });

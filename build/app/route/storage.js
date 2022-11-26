@@ -8,4 +8,5 @@ const StorageController_1 = __importDefault(require("../controllers/StorageContr
 const cloudinary_1 = __importDefault(require("..//..//infrastructure/cloudinary"));
 const router = (0, express_1.Router)();
 router.post("/upload", cloudinary_1.default.single("file"), StorageController_1.default.uploadSingleFile);
+router.post("/uploads", cloudinary_1.default.array("files"), StorageController_1.default.uploadMultipleFiles);
 exports.default = router;

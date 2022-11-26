@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sendFriendInviteSocket = void 0;
+exports.sendEventReactMessageSocket = exports.sendEventUnsendMessageSocket = exports.sendFriendInviteSocket = void 0;
 const logger_1 = __importDefault(require("../../../infrastructure/logger"));
 let socket;
 exports.default = (server) => {
@@ -17,3 +17,19 @@ const sendFriendInviteSocket = (friendInvite, userId) => {
     socket.to(String(userId)).emit("send-friend-invite", { friendInvite });
 };
 exports.sendFriendInviteSocket = sendFriendInviteSocket;
+const sendEventUnsendMessageSocket = (data, userId) => {
+    if (!socket) {
+        logger_1.default.error("socket in ousite is null");
+        return;
+    }
+    socket.to(String(userId)).emit("unsend-message", Object.assign({}, data));
+};
+exports.sendEventUnsendMessageSocket = sendEventUnsendMessageSocket;
+const sendEventReactMessageSocket = (data, userId) => {
+    if (!socket) {
+        logger_1.default.error("socket in ousite is null");
+        return;
+    }
+    socket.to(String(userId)).emit("react-message", Object.assign({}, data));
+};
+exports.sendEventReactMessageSocket = sendEventReactMessageSocket;
