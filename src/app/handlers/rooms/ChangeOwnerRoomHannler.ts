@@ -6,20 +6,20 @@ import Handler from "../Handler";
 
 export interface IAddUserIntoRoomHandler {
   myId: string;
-  userId: string;
+  newOwner: string;
   roomId: string;
 }
 interface IInputValidated {
   myId: string;
-  userId: string;
+  newOwner: string;
   roomId: string;
 }
 class AddUserIntoRoomHandler extends Handler<IAddUserIntoRoomHandler> {
   protected async validate(
     request: IAddUserIntoRoomHandler
   ): Promise<IInputValidated> {
-    const userId = this._colectErrors.collect("userId", () =>
-      StringValidate(request.userId)
+    const newOwner = this._colectErrors.collect("userId", () =>
+      StringValidate(request.newOwner)
     );
     const roomId = this._colectErrors.collect("roomId", () =>
       StringValidate(request.roomId)
@@ -27,15 +27,15 @@ class AddUserIntoRoomHandler extends Handler<IAddUserIntoRoomHandler> {
     if (this._colectErrors.hasError()) {
       throw new ValidationError(this._colectErrors.errors);
     }
-    return { userId, roomId, myId: request.myId };
+    return { newOwner, roomId, myId: request.myId };
   }
 
   public async handle(request: IAddUserIntoRoomHandler): Promise<any> {
     const input = await this.validate(request);
-    const user = await UserRepository.findOneById(input.userId);
+    const user = await UserRepository.findOneById(input.newOwner);
     if (!user) throw new Error("user not found");
-    const room = await RoomRepository.removeUserFromRoom(
-      input.userId,
+    const room = await RoomRepository.changeOwnerRoom(
+      input.newOwner,
       input.roomId,
       input.myId
     );

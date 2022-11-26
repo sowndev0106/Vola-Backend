@@ -17,7 +17,9 @@ class GetListUserAvailableAddRoom extends Handler<IGetListUserAvailableAddRoom> 
   public async handle(request: IGetListUserAvailableAddRoom): Promise<any> {
     await this.validate(request);
     const user = await UserRepository.GetOnePopulate(request.myId);
+
     const room = await RoomRepository.getRoomSimplePopulate(request.roomId);
+
     const listFiendAvalible = user?.friends?.filter((friend: any) => {
       return !room?.users.find(({ user }: any) => {
         return String(user._id) === String(friend.userId._id);

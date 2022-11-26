@@ -43,6 +43,7 @@ export default mongoose.model(
       },
       name: String,
       avatar: String,
+      owner: { type: mongoose.Types.ObjectId, require: true, ref: "users" },
     },
     {
       timestamps: true,

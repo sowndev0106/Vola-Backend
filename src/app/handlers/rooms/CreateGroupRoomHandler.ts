@@ -15,6 +15,7 @@ interface IInputValidated {
   userIds: Array<{ _id: string }>;
   avatar?: string;
   name: string;
+  myId: string;
 }
 class CreateGroupRoomHandler extends Handler<ICreateGroupRoomHandler> {
   protected async validate(
@@ -41,6 +42,7 @@ class CreateGroupRoomHandler extends Handler<ICreateGroupRoomHandler> {
       userIds: idsValidated,
       name: request.name,
       avatar: request.avatar,
+      myId: request.myId,
     };
   }
 
@@ -52,6 +54,7 @@ class CreateGroupRoomHandler extends Handler<ICreateGroupRoomHandler> {
       users: input.userIds,
       avatar: request.avatar,
       name: request.name,
+      owner: input.myId,
     };
     const result = await RoomRepository.add(room);
 

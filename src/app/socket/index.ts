@@ -1,5 +1,7 @@
+import { User } from "@firebase/auth";
 import { Server, Socket } from "socket.io";
 import logger from "../../infrastructure/logger";
+import UserRepository from "../../infrastructure/mongoose/repositories/UserRepository";
 import { IFriendInvite } from "../entities/Friend";
 import { IMessage } from "../entities/Room";
 import { IUser } from "../entities/User";
@@ -46,6 +48,20 @@ export default class SocketMain {
   ) {
     userIds.forEach((e) => {
       this.io.to(String(e)).emit("server-send-message", { message, roomId });
+    });
+  }
+  serverSendReactMessageToUsers(
+    userIds: string[],
+    messageId: string,
+    roomId: string,
+    react: string,
+    user: User
+  ) {
+    userIds.map(async (e) => {
+      const user = await UserRepository.findOneById(e as string);
+      this.io
+        .to(String(e))
+        .emit("server-send-react-message", { messageId, roomId, user, react });
     });
   }
   getSocket(): Server {

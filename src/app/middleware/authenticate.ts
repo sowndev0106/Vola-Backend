@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import UserRepository from "../../infrastructure/mongoose/repositories/UserRepository";
 import firebaseAdmin from "..//..//infrastructure/firebase";
 import HeaderTokenInvalidError from "../errors/HeaderTokenInvalidError";
+import redis from "redis";
 
 export default async (req: Request, res: Response, next: NextFunction) => {
   const token = req.headers.authorization?.split(" ")[1] as string;
@@ -29,7 +30,6 @@ export default async (req: Request, res: Response, next: NextFunction) => {
     req.headers.userId = user._id;
     return next();
   } catch (error) {
-    console.log(error);
     throw new HeaderTokenInvalidError("authorization token invalid");
   }
 };

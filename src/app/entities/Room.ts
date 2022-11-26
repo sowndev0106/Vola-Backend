@@ -5,6 +5,7 @@ export interface IRoom {
   avatar?: string;
   messages: IMessage[];
   typeRoom: TypeRoom;
+  owner?: string;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -30,6 +31,8 @@ export enum TypeMeesage {
   File = "file",
   Text = "text",
   Image = "image",
+  Images = "images",
+  Unsend = "unsend",
 }
 export enum TypeRoom {
   Private = "private",

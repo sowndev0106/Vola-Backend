@@ -14,3 +14,18 @@ export const sendFriendInviteSocket = (friendInvite: any, userId: string) => {
   }
   socket.to(String(userId)).emit("send-friend-invite", { friendInvite });
 };
+export const sendEventUnsendMessageSocket = (data: any, userId: string) => {
+  if (!socket) {
+    logger.error("socket in ousite is null");
+    return;
+  }
+  socket.to(String(userId)).emit("unsend-message", { ...data });
+};
+
+export const sendEventReactMessageSocket = (data: any, userId: string) => {
+  if (!socket) {
+    logger.error("socket in ousite is null");
+    return;
+  }
+  socket.to(String(userId)).emit("react-message", { ...data });
+};

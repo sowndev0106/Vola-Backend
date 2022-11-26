@@ -1,45 +1,50 @@
+import e from "express";
 import RoomRepository from "../../../infrastructure/mongoose/repositories/RoomRepository";
 import UserRepository from "../../../infrastructure/mongoose/repositories/UserRepository";
+import IdValidate from "../../../util/validate/IdValidate";
 import StringValidate from "../../../util/validate/StringValidate";
 import ValidationError from "../../errors/ValidationError";
+
 import Handler from "../Handler";
 
-export interface IAddUserIntoRoomHandler {
+export interface IGetReactMessageHandler {
   myId: string;
-  userId: string;
+  messageId: string;
   roomId: string;
 }
+
 interface IInputValidated {
   myId: string;
-  userId: string;
+  messageId: string;
   roomId: string;
 }
-class AddUserIntoRoomHandler extends Handler<IAddUserIntoRoomHandler> {
+class GetReactMessageHandler extends Handler<IGetReactMessageHandler> {
   protected async validate(
-    request: IAddUserIntoRoomHandler
+    request: IGetReactMessageHandler
   ): Promise<IInputValidated> {
-    const userId = this._colectErrors.collect("userId", () =>
-      StringValidate(request.userId)
+    const messageId = this._colectErrors.collect("messageId", () =>
+      IdValidate(request.messageId)
     );
     const roomId = this._colectErrors.collect("roomId", () =>
-      StringValidate(request.roomId)
+      IdValidate(request.roomId)
     );
+
     if (this._colectErrors.hasError()) {
       throw new ValidationError(this._colectErrors.errors);
     }
-    return { userId, roomId, myId: request.myId };
+    return { messageId, roomId, myId: request.myId };
   }
 
-  public async handle(request: IAddUserIntoRoomHandler): Promise<any> {
+  public async handle(request: IGetReactMessageHandler): Promise<any> {
     const input = await this.validate(request);
-    const user = await UserRepository.findOneById(input.userId);
-    if (!user) throw new Error("user not found");
-    const room = await RoomRepository.removeUserFromRoom(
-      input.userId,
+
+    const result: any = await RoomRepository.GetReactMessage(
+      input.messageId,
       input.roomId,
       input.myId
     );
-    return room;
+
+    return result;
   }
 }
-export default new AddUserIntoRoomHandler();
+export default new GetReactMessageHandler();

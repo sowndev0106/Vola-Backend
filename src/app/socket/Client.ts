@@ -27,10 +27,15 @@ export default class Client {
 
   addlistenEvent() {
     this.socket.on("client-send-message", this.onClientSendMessage.bind(this));
+    this.socket.on(
+      "client-send-react-mesage",
+      this.onClientSendReactMessage.bind(this)
+    );
     this.socket.on("disconnect", this.onDiscornect.bind(this));
     this.socket.on("start", this.start.bind(this));
   }
   start(data: any) {
+    console.log(data);
     // add user to list users
     addUserHandler
       .bind(this)({ token: data?.token, client: this })
@@ -43,6 +48,12 @@ export default class Client {
   }
 
   onClientSendMessage(data: IClientSendMessage) {
+    logger.info(`Client ${this.socket.id} send message`);
+    clientSendMessageHandler(data, this.socketMain).catch((err) =>
+      this.error(err)
+    );
+  }
+  onClientSendReactMessage(data: IClientSendMessage) {
     logger.info(`Client ${this.socket.id} send message`);
     clientSendMessageHandler(data, this.socketMain).catch((err) =>
       this.error(err)
