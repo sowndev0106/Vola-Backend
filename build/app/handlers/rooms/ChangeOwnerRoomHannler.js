@@ -16,6 +16,7 @@ const RoomRepository_1 = __importDefault(require("../../../infrastructure/mongoo
 const UserRepository_1 = __importDefault(require("../../../infrastructure/mongoose/repositories/UserRepository"));
 const StringValidate_1 = __importDefault(require("../../../util/validate/StringValidate"));
 const ValidationError_1 = __importDefault(require("../../errors/ValidationError"));
+const handlerOutsite_1 = require("../../socket/handlerOutsite");
 const Handler_1 = __importDefault(require("../Handler"));
 class ChangeOwnerRoomHannler extends Handler_1.default {
     validate(request) {
@@ -35,6 +36,9 @@ class ChangeOwnerRoomHannler extends Handler_1.default {
             if (!user)
                 throw new Error("user not found");
             const room = yield RoomRepository_1.default.changeOwnerRoom(input.newOwner, input.roomId, input.myId);
+            room.users.forEach((e) => {
+                (0, handlerOutsite_1.sendEventChangeOwnerRoomSocket)({ newOwner: input.newOwner, roomId: input.roomId }, e._id);
+            });
             return room;
         });
     }

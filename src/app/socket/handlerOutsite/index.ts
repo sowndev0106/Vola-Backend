@@ -47,6 +47,5 @@ export const sendEventAddNewUserIntoRoomSocket = (
     logger.error("socket in ousite is null");
     return;
   }
-
   socket.to(String(userId)).emit("add-user-room", { ...data });
 };

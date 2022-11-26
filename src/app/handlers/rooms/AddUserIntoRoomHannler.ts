@@ -47,7 +47,9 @@ class AddUserIntoRoomHandler extends Handler<IAddUserIntoRoomHandler> {
         console.log(error);
       }
     }
-    return await RoomRepository.getRoomSimpleById(input.roomId);
+    const roomResult = await RoomRepository.getRoomSimpleById(input.roomId);
+
+    return roomResult;
   }
   private async checKValidateUserId(userId: string): Promise<string | null> {
     const regexIdMongo = /^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/i;

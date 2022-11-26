@@ -10,7 +10,7 @@ class GetMyProfileHandler extends Handler<IGetMyProfileRequest> {
   public async handle(request: IGetMyProfileRequest): Promise<any> {
     await this.validate(request);
     const user = await UserRepository.GetOnePopulate(request.id);
-    const rooms = await RoomRepository.getRoomsByUser(request.id, 10, 0);
+    const rooms = await RoomRepository.getRoomsByUser(request.id, 100, 0);
     return { user, rooms };
   }
 }

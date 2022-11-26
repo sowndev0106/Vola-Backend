@@ -49,7 +49,8 @@ class AddUserIntoRoomHandler extends Handler_1.default {
                     console.log(error);
                 }
             }
-            return yield RoomRepository_1.default.getRoomSimpleById(input.roomId);
+            const roomResult = yield RoomRepository_1.default.getRoomSimpleById(input.roomId);
+            return roomResult;
         });
     }
     checKValidateUserId(userId) {

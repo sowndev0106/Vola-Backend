@@ -3,10 +3,10 @@ import "express-async-errors";
 import "dotenv/config";
 import helmet from "helmet";
 import morgan from "morgan";
+import https from "https";
 import cors from "cors";
 import route from "./app/route";
 import "./infrastructure/mongoose";
-import http from "http";
 import Socket from "./app/socket";
 import fs from "fs";
 import socketOutSiteHandler from "./app/socket/handlerOutsite";
@@ -16,8 +16,8 @@ const options = {
   key: fs.readFileSync("ssl/key.pem"),
   cert: fs.readFileSync("ssl/cert.pem"),
 };
-const server = http.createServer(app);
 
+const server = https.createServer(options, app);
 app.use(cors());
 
 // config socket

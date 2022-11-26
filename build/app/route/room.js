@@ -23,5 +23,8 @@ router.delete("/:roomId", RoomController_1.default.deleteRoom);
 router.patch("/:roomId/owner", RoomController_1.default.changeOwner);
 router.delete("/:roomId/messages/:messageId", RoomController_1.default.deleteMessage);
 router.post("/:roomId/messages/:messageId/react", RoomController_1.default.reactMessage);
-router.get("/:roomId/messages/:messageId/react", RoomController_1.default.getReactMessage);
+// router.get(
+//   "/:roomId/messages/:messageId/react",
+//   RoomController.getReHtactMessage
+// );
 exports.default = router;

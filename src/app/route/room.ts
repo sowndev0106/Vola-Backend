@@ -48,9 +48,9 @@ router.delete("/:roomId/messages/:messageId", RoomController.deleteMessage);
 
 router.post("/:roomId/messages/:messageId/react", RoomController.reactMessage);
 
-router.get(
-  "/:roomId/messages/:messageId/react",
-  RoomController.getReactMessage
-);
+// router.get(
+//   "/:roomId/messages/:messageId/react",
+//   RoomController.getReHtactMessage
+// );
 
 export default router;
