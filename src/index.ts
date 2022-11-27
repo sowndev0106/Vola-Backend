@@ -4,6 +4,7 @@ import "dotenv/config";
 import helmet from "helmet";
 import morgan from "morgan";
 import https from "https";
+import http from "http";
 import cors from "cors";
 import route from "./app/route";
 import "./infrastructure/mongoose";
@@ -17,7 +18,8 @@ const options = {
   cert: fs.readFileSync("ssl/cert.pem"),
 };
 
-const server = https.createServer(options, app);
+// const server = https.createServer(options, app);
+const server = http.createServer(app);
 app.use(cors());
 
 // config socket

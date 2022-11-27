@@ -23,7 +23,7 @@ class GetMyProfileHandler extends Handler_1.default {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.validate(request);
             const user = yield UserRepository_1.default.GetOnePopulate(request.id);
-            const rooms = yield RoomRepository_1.default.getRoomsByUser(request.id, 10, 0);
+            const rooms = yield RoomRepository_1.default.getRoomsByUser(request.id, 100, 0);
             return { user, rooms };
         });
     }

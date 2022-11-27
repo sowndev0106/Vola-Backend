@@ -282,6 +282,21 @@ class RoomRepository extends Repository<IRoom> {
     const reacts = result?.messages[0]?.reacts;
     return reacts ? reacts : [];
   }
+  async readMessageInRoom(roomId: string, myId: string) {
+    // add new React
+    const result: any = await RoomModel.updateOne(
+      {
+        _id: roomId,
+        "users._id": myId,
+      },
+      {
+        $set: {
+          "users.$.missing": 0,
+        },
+      }
+    );
+    return result;
+  }
 }
 
 export default new RoomRepository();

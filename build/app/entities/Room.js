@@ -8,6 +8,7 @@ var TypeMeesage;
     TypeMeesage["Image"] = "image";
     TypeMeesage["Images"] = "images";
     TypeMeesage["Unsend"] = "unsend";
+    TypeMeesage["Notification"] = "notification";
 })(TypeMeesage = exports.TypeMeesage || (exports.TypeMeesage = {}));
 var TypeRoom;
 (function (TypeRoom) {

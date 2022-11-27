@@ -43,6 +43,7 @@ router.get(
 router.delete("/:roomId", RoomController.deleteRoom);
 
 router.patch("/:roomId/owner", RoomController.changeOwner);
+router.post("/:roomId/read", RoomController.readMessageInRoom);
 
 router.delete("/:roomId/messages/:messageId", RoomController.deleteMessage);
 

@@ -17,6 +17,7 @@ import ChangeOwnerRoomHannler from "../handlers/rooms/ChangeOwnerRoomHannler";
 import DeleteMessageHannler from "../handlers/rooms/DeleteMessageHannler";
 import ReactMessageHannler from "../handlers/rooms/ReactMessageHannler";
 import GetReactMessageHannler from "../handlers/rooms/GetReactMessageHannler";
+import ReadMessageInRoomHannler from "../handlers/rooms/ReadMessageInRoomHannler";
 
 class RoomController {
   // [DELETE] api/rooms/:roomId
@@ -182,6 +183,14 @@ class RoomController {
       roomId: req.params.roomId,
     };
     const result = await GetReactMessageHannler.handle(request);
+    res.status(200).json(result);
+  }
+  async readMessageInRoom(req: Request, res: Response, next: NextFunction) {
+    const request = {
+      myId: req.headers.userId as string,
+      roomId: req.params.roomId,
+    };
+    const result = await ReadMessageInRoomHannler.handle(request);
     res.status(200).json(result);
   }
 }
