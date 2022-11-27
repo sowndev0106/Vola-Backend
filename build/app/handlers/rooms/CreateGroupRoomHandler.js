@@ -17,6 +17,7 @@ const UserRepository_1 = __importDefault(require("../../../infrastructure/mongoo
 const handler_1 = require("../../../infrastructure/s3/handler");
 const Room_1 = require("../../entities/Room");
 const ValidationError_1 = __importDefault(require("../../errors/ValidationError"));
+const handlerOutsite_1 = require("../../socket/handlerOutsite");
 const Handler_1 = __importDefault(require("../Handler"));
 class CreateGroupRoomHandler extends Handler_1.default {
     validate(request) {
@@ -47,6 +48,7 @@ class CreateGroupRoomHandler extends Handler_1.default {
         });
     }
     handle(request) {
+        var _a;
         return __awaiter(this, void 0, void 0, function* () {
             const input = yield this.validate(request);
             const room = {
@@ -58,6 +60,9 @@ class CreateGroupRoomHandler extends Handler_1.default {
                 owner: input.myId,
             };
             const result = yield RoomRepository_1.default.add(room);
+            (_a = result === null || result === void 0 ? void 0 : result.users) === null || _a === void 0 ? void 0 : _a.forEach((e) => {
+                (0, handlerOutsite_1.sendEventCreateNewRoomSocket)(room, e._id);
+            });
             return result;
         });
     }

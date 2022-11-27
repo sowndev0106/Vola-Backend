@@ -17,6 +17,7 @@ const Repository_1 = __importDefault(require("./Repository"));
 const Room_2 = __importDefault(require("../model/Room"));
 const UserRepository_1 = __importDefault(require("./UserRepository"));
 const mongoose_1 = __importDefault(require("mongoose"));
+const handlerOutsite_1 = require("../../../app/socket/handlerOutsite");
 class RoomRepository extends Repository_1.default {
     constructor() {
         super(Room_2.default);
@@ -78,6 +79,7 @@ class RoomRepository extends Repository_1.default {
     getPrivateRoomByUser(myId, userId) {
         return __awaiter(this, void 0, void 0, function* () {
             const user = yield UserRepository_1.default.findOneById(userId);
+            const myUser = yield UserRepository_1.default.findOneById(myId);
             if (!user)
                 throw new Error("userId not found");
             var room = yield Room_2.default.findOne({
@@ -93,12 +95,18 @@ class RoomRepository extends Repository_1.default {
                     users: [{ _id: myId }, { _id: userId }],
                     typeRoom: Room_1.TypeRoom.Private,
                 });
+                const result = room === null || room === void 0 ? void 0 : room._doc;
+                result.avatar = myUser === null || myUser === void 0 ? void 0 : myUser.avatar;
+                result.name = myUser === null || myUser === void 0 ? void 0 : myUser.name;
+                (0, handlerOutsite_1.sendEventCreateNewRoomSocket)(result, userId);
+                result.avatar = user.avatar;
+                result.name = user.name;
+                (0, handlerOutsite_1.sendEventCreateNewRoomSocket)(result, myId);
+                return room;
             }
             // add avatar and name user in room
-            if (!room.avatar)
-                room.avatar = user.avatar;
-            if (!room.name)
-                room.name = user.name;
+            room.avatar = user.avatar;
+            room.name = user.name;
             return room;
         });
     }
@@ -291,6 +299,20 @@ class RoomRepository extends Repository_1.default {
             }, { "messages.$": 1 }).populate({ path: "messages.reacts.user", select: "_id email avatar " });
             const reacts = (_a = result === null || result === void 0 ? void 0 : result.messages[0]) === null || _a === void 0 ? void 0 : _a.reacts;
             return reacts ? reacts : [];
+        });
+    }
+    readMessageInRoom(roomId, myId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            // add new React
+            const result = yield Room_2.default.updateOne({
+                _id: roomId,
+                "users._id": myId,
+            }, {
+                $set: {
+                    "users.$.missing": 0,
+                },
+            });
+            return result;
         });
     }
 }

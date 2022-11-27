@@ -21,6 +21,7 @@ router.get("/:roomId", RoomController_1.default.getRoomById);
 router.get("/:roomId/user-vailable-add-room", RoomController_1.default.getListUserAvailableAddRoom);
 router.delete("/:roomId", RoomController_1.default.deleteRoom);
 router.patch("/:roomId/owner", RoomController_1.default.changeOwner);
+router.post("/:roomId/read", RoomController_1.default.readMessageInRoom);
 router.delete("/:roomId/messages/:messageId", RoomController_1.default.deleteMessage);
 router.post("/:roomId/messages/:messageId/react", RoomController_1.default.reactMessage);
 // router.get(

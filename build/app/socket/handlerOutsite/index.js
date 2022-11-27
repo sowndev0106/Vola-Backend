@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sendEventAddNewUserIntoRoomSocket = exports.sendEventChangeOwnerRoomSocket = exports.sendEventReactMessageSocket = exports.sendEventUnsendMessageSocket = exports.sendFriendInviteSocket = void 0;
+exports.sendEventCreateNewRoomSocket = exports.sendEventAddNewUserIntoRoomSocket = exports.sendEventChangeOwnerRoomSocket = exports.sendEventReactMessageSocket = exports.sendEventUnsendMessageSocket = exports.sendFriendInviteSocket = void 0;
 const logger_1 = __importDefault(require("../../../infrastructure/logger"));
 let socket;
 exports.default = (server) => {
@@ -49,3 +49,11 @@ const sendEventAddNewUserIntoRoomSocket = (data, userId) => {
     socket.to(String(userId)).emit("add-user-room", Object.assign({}, data));
 };
 exports.sendEventAddNewUserIntoRoomSocket = sendEventAddNewUserIntoRoomSocket;
+const sendEventCreateNewRoomSocket = (data, userId) => {
+    if (!socket) {
+        logger_1.default.error("socket in ousite is null");
+        return;
+    }
+    socket.to(String(userId)).emit("new-room", Object.assign({}, data));
+};
+exports.sendEventCreateNewRoomSocket = sendEventCreateNewRoomSocket;
