@@ -3,6 +3,7 @@ import UserRepository from "../../../infrastructure/mongoose/repositories/UserRe
 import { deleteFileS3ByLink } from "../../../infrastructure/s3/handler";
 import { IRoom, TypeRoom } from "../../entities/Room";
 import ValidationError from "../../errors/ValidationError";
+import { sendEventCreateNewRoomSocket } from "../../socket/handlerOutsite";
 import Handler from "../Handler";
 
 export interface ICreateGroupRoomHandler {
@@ -57,7 +58,9 @@ class CreateGroupRoomHandler extends Handler<ICreateGroupRoomHandler> {
       owner: input.myId,
     };
     const result = await RoomRepository.add(room);
-
+    result?.users?.forEach((e) => {
+      sendEventCreateNewRoomSocket(room, e._id);
+    });
     return result;
   }
   private async checKValidateUserId(userId: string): Promise<string | null> {

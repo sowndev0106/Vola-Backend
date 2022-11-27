@@ -49,3 +49,10 @@ export const sendEventAddNewUserIntoRoomSocket = (
   }
   socket.to(String(userId)).emit("add-user-room", { ...data });
 };
+export const sendEventCreateNewRoomSocket = (data: any, userId: string) => {
+  if (!socket) {
+    logger.error("socket in ousite is null");
+    return;
+  }
+  socket.to(String(userId)).emit("new-room", { ...data });
+};

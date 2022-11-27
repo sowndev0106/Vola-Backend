@@ -10,6 +10,7 @@ import RoomModel from "../model/Room";
 import UserRepository from "./UserRepository";
 import mongoose, { mongo } from "mongoose";
 import { deleteFileS3ByLink } from "../../s3/handler";
+import { sendEventCreateNewRoomSocket } from "../../../app/socket/handlerOutsite";
 class RoomRepository extends Repository<IRoom> {
   constructor() {
     super(RoomModel as any);
@@ -67,6 +68,7 @@ class RoomRepository extends Repository<IRoom> {
   }
   async getPrivateRoomByUser(myId: string, userId: string) {
     const user = await UserRepository.findOneById(userId);
+    const myUser = await UserRepository.findOneById(myId);
     if (!user) throw new Error("userId not found");
 
     var room: any = await RoomModel.findOne(
@@ -86,10 +88,20 @@ class RoomRepository extends Repository<IRoom> {
         users: [{ _id: myId }, { _id: userId }],
         typeRoom: TypeRoom.Private,
       });
+      const result = room?._doc;
+
+      result.avatar = myUser?.avatar;
+      result.name = myUser?.name;
+      sendEventCreateNewRoomSocket(result, userId);
+
+      result.avatar = user.avatar;
+      result.name = user.name;
+      sendEventCreateNewRoomSocket(result, myId);
+      return room;
     }
     // add avatar and name user in room
-    if (!room.avatar) room.avatar = user.avatar;
-    if (!room.name) room.name = user.name;
+    room.avatar = user.avatar;
+    room.name = user.name;
 
     return room;
   }
