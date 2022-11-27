@@ -35,6 +35,18 @@ export const sendEventChangeOwnerRoomSocket = (data: any, userId: string) => {
     logger.error("socket in ousite is null");
     return;
   }
-  console.log({ data, userId });
-  socket.to(String(userId)).emit("change-owner-room-message", { ...data });
+
+  socket.to(String(userId)).emit("change-owner-room", { ...data });
+};
+
+export const sendEventAddNewUserIntoRoomSocket = (
+  data: any,
+  userId: string
+) => {
+  if (!socket) {
+    logger.error("socket in ousite is null");
+    return;
+  }
+
+  socket.to(String(userId)).emit("add-user-room", { ...data });
 };
