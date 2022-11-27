@@ -4,7 +4,7 @@ import StringValidate from "../../../util/validate/StringValidate";
 import ValidationError from "../../errors/ValidationError";
 import Handler from "../Handler";
 
-export interface IAddUserIntoRoomHandler {
+export interface IChangeOwnerRoomHannler {
   myId: string;
   newOwner: string;
   roomId: string;
@@ -14,9 +14,9 @@ interface IInputValidated {
   newOwner: string;
   roomId: string;
 }
-class AddUserIntoRoomHandler extends Handler<IAddUserIntoRoomHandler> {
+class ChangeOwnerRoomHannler extends Handler<IChangeOwnerRoomHannler> {
   protected async validate(
-    request: IAddUserIntoRoomHandler
+    request: IChangeOwnerRoomHannler
   ): Promise<IInputValidated> {
     const newOwner = this._colectErrors.collect("userId", () =>
       StringValidate(request.newOwner)
@@ -30,7 +30,7 @@ class AddUserIntoRoomHandler extends Handler<IAddUserIntoRoomHandler> {
     return { newOwner, roomId, myId: request.myId };
   }
 
-  public async handle(request: IAddUserIntoRoomHandler): Promise<any> {
+  public async handle(request: IChangeOwnerRoomHannler): Promise<any> {
     const input = await this.validate(request);
     const user = await UserRepository.findOneById(input.newOwner);
     if (!user) throw new Error("user not found");
@@ -42,4 +42,4 @@ class AddUserIntoRoomHandler extends Handler<IAddUserIntoRoomHandler> {
     return room;
   }
 }
-export default new AddUserIntoRoomHandler();
+export default new ChangeOwnerRoomHannler();

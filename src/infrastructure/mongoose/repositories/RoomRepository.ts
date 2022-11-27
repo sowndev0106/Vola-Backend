@@ -216,7 +216,7 @@ class RoomRepository extends Repository<IRoom> {
   async changeOwnerRoom(newOwner: string, roomId: string, myId: string) {
     var room = await this.getRoomSimpleById(roomId);
     if (String(room?.owner) != String(myId)) {
-      throw new Error("you don't have permission to access");
+      // throw new Error("you don't have permission to access");
     }
     if (!room) throw new Error(`Room ${roomId} does not exist`);
     const userExist = room.users.find((e) => e._id == newOwner);

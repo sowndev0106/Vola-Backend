@@ -17,7 +17,7 @@ const UserRepository_1 = __importDefault(require("../../../infrastructure/mongoo
 const StringValidate_1 = __importDefault(require("../../../util/validate/StringValidate"));
 const ValidationError_1 = __importDefault(require("../../errors/ValidationError"));
 const Handler_1 = __importDefault(require("../Handler"));
-class AddUserIntoRoomHandler extends Handler_1.default {
+class ChangeOwnerRoomHannler extends Handler_1.default {
     validate(request) {
         return __awaiter(this, void 0, void 0, function* () {
             const newOwner = this._colectErrors.collect("userId", () => (0, StringValidate_1.default)(request.newOwner));
@@ -39,4 +39,4 @@ class AddUserIntoRoomHandler extends Handler_1.default {
         });
     }
 }
-exports.default = new AddUserIntoRoomHandler();
+exports.default = new ChangeOwnerRoomHannler();

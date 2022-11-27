@@ -233,7 +233,7 @@ class RoomRepository extends Repository_1.default {
         return __awaiter(this, void 0, void 0, function* () {
             var room = yield this.getRoomSimpleById(roomId);
             if (String(room === null || room === void 0 ? void 0 : room.owner) != String(myId)) {
-                throw new Error("you don't have permission to access");
+                // throw new Error("you don't have permission to access");
             }
             if (!room)
                 throw new Error(`Room ${roomId} does not exist`);
