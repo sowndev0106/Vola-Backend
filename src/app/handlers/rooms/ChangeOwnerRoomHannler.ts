@@ -2,6 +2,7 @@ import RoomRepository from "../../../infrastructure/mongoose/repositories/RoomRe
 import UserRepository from "../../../infrastructure/mongoose/repositories/UserRepository";
 import StringValidate from "../../../util/validate/StringValidate";
 import ValidationError from "../../errors/ValidationError";
+import { sendEventChangeOwnerRoomSocket } from "../../socket/handlerOutsite";
 import Handler from "../Handler";
 
 export interface IChangeOwnerRoomHannler {
@@ -39,6 +40,13 @@ class ChangeOwnerRoomHannler extends Handler<IChangeOwnerRoomHannler> {
       input.roomId,
       input.myId
     );
+    room.users.forEach((e: any) => {
+      sendEventChangeOwnerRoomSocket(
+        { newOwner: input.newOwner, roomId: input.roomId },
+        e._id
+      );
+    });
+
     return room;
   }
 }

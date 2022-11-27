@@ -29,3 +29,12 @@ export const sendEventReactMessageSocket = (data: any, userId: string) => {
   }
   socket.to(String(userId)).emit("react-message", { ...data });
 };
+
+export const sendEventChangeOwnerRoomSocket = (data: any, userId: string) => {
+  if (!socket) {
+    logger.error("socket in ousite is null");
+    return;
+  }
+  console.log({ data, userId });
+  socket.to(String(userId)).emit("change-owner-room-message", { ...data });
+};
