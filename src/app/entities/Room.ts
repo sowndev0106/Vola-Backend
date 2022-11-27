@@ -33,6 +33,7 @@ export enum TypeMeesage {
   Image = "image",
   Images = "images",
   Unsend = "unsend",
+  Notification = "notification",
 }
 export enum TypeRoom {
   Private = "private",
