@@ -2,7 +2,6 @@ import { User } from "@firebase/auth";
 import { Server, Socket } from "socket.io";
 import logger from "../../infrastructure/logger";
 import UserRepository from "../../infrastructure/mongoose/repositories/UserRepository";
-import { IFriendInvite } from "../entities/Friend";
 import { IMessage } from "../entities/Room";
 import { IUser } from "../entities/User";
 import Client from "./Client";

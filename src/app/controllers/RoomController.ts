@@ -2,7 +2,6 @@ import { NextFunction, Request, Response } from "express";
 import GetPrivateRoomByUserHandler from "../handlers/rooms/GetPrivateRoomByUserHandler";
 import CreateGroupRoomHandler from "../handlers/rooms/CreateGroupRoomHandler";
 import GetMyRoomsHandler from "../handlers/rooms/GetMyRoomsHandler";
-import { IMessage } from "../entities/Room";
 import GetMessagesHandler from "../handlers/rooms/GetMessagesHandler";
 import AddUserIntoRoomHannler from "../handlers/rooms/AddUserIntoRoomHannler";
 import SearchRoomHandler from "../handlers/rooms/SearchRoomHandler";

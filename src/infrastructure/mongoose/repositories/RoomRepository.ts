@@ -25,6 +25,7 @@ class RoomRepository extends Repository<IRoom> {
       .skip(offset)
       .sort({ updatedAt: -1 })
       .exec();
+      
     const result = rooms.map(async (room: any) => {
       // private room then add avatar and name room
       if (room.typeRoom == TypeRoom.Private) {
